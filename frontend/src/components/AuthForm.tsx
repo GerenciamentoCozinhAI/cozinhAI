@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { register, login, loginWithGoogle, logout } from '../lib/api';
+import { register, login, loginWithGoogle, logout, getUserProfile } from '../lib/api';
 
 const AuthForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -9,10 +9,14 @@ const AuthForm: React.FC = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) setIsLoggedIn(true);
+    if (token) {
+      setIsLoggedIn(true);
+      getUserProfile().then(setUserProfile).catch(console.error);
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,18 +25,20 @@ const AuthForm: React.FC = () => {
 
     try {
       if (isRegister) {
-        console.log('Dados enviados:', { email, password, name, avatar }); // Log para depuração
+        console.log('Dados enviados:', { email, password, name, avatar });
         const data = await register(email, password, name, avatar || undefined);
         if (data.error) throw new Error(data.error);
         localStorage.setItem('token', data.token);
         setMessage('Registro concluído!');
         setIsLoggedIn(true);
+        getUserProfile().then(setUserProfile).catch(console.error);
       } else {
         const data = await login(email, password);
         if (data.error) throw new Error(data.error);
         localStorage.setItem('token', data.token);
         setMessage('Login bem-sucedido!');
         setIsLoggedIn(true);
+        getUserProfile().then(setUserProfile).catch(console.error);
       }
     } catch (error: any) {
       setMessage(error.message);
@@ -53,6 +59,7 @@ const AuthForm: React.FC = () => {
       if (data.error) throw new Error(data.error);
       localStorage.removeItem('token');
       setIsLoggedIn(false);
+      setUserProfile(null);
       setMessage('Logout realizado com sucesso!');
     } catch (error: any) {
       setMessage(error.message);
@@ -62,7 +69,9 @@ const AuthForm: React.FC = () => {
   if (isLoggedIn) {
     return (
       <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">Bem-vindo!</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Bem-vindo, {userProfile?.name}!</h2>
+        {userProfile?.avatar && <img src={userProfile.avatar} alt="Avatar" className="w-20 h-20 rounded-full mx-auto mb-4" />}
+        <p className="text-center">{userProfile?.email}</p>
         <button
           onClick={handleLogout}
           className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 transition duration-200"

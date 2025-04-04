@@ -1,4 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL as string;;
+import { supabase } from './supabase';
 
 export const register = async (email: string, password: string, name: string, avatar?: string) => {
   try {
@@ -82,4 +83,15 @@ export const logout = async () => {
     console.error('Erro no fetch:', error);
     throw error;
   }
+};
+
+export const getUserProfile = async () => {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw new Error(error.message);
+  return {
+    id: data.user?.id,
+    email: data.user?.email,
+    name: data.user?.user_metadata.full_name || data.user?.user_metadata.name,
+    avatar: data.user?.user_metadata.avatar_url,
+  };
 };

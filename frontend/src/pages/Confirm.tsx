@@ -23,18 +23,18 @@ const Confirm: React.FC = () => {
             console.log('Sessão configurada:', data);
             localStorage.setItem('token', accessToken);
 
-            // Se for login com Google, inserir na tabela users
             const { user } = data;
             if (user) {
+              console.log('Metadados do usuário:', user.user_metadata);
+              const googleName = user.user_metadata.display_name || user.user_metadata.name || 'Usuário sem nome';
               const { error: insertError } = await supabase
                 .from('users')
                 .upsert({
                   id: user.id,
-                  email: user.email,
-                  name: user.user_metadata.display_name || 'Usuário Google',
-                  avatar: user.user_metadata.avatar_url || '',
+                  name: googleName, // Apenas id e name
                 });
               if (insertError) console.error('Erro ao inserir usuário:', insertError.message);
+              else console.log('Usuário inserido na tabela:', { id: user.id, name: googleName });
             }
 
             console.log('Confirmação concluída!');

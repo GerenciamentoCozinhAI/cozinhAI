@@ -11,15 +11,14 @@ export const register = async (req: Request, res: Response): Promise<any> => {
     email,
     password,
     options: {
-      data: { display_name: name },
-      emailRedirectTo: 'http://localhost:5173/confirm',
+      data: { full_name: name, avatar_url: avatar }, // Salvar no auth.users
     },
   });
   if (error) return res.status(400).json({ error: error.message });
 
   const { error: insertError } = await supabase
     .from('users')
-    .insert({ id: data.user?.id, email, name, avatar });
+    .insert({ id: data.user?.id, name }); // Apenas id e name
   if (insertError) return res.status(500).json({ error: insertError.message });
 
   return res.status(201).json({ user: data.user, token: data.session?.access_token });
