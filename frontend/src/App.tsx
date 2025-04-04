@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AuthForm from './components/AuthForm';
 import Confirm from './pages/Confirm';
