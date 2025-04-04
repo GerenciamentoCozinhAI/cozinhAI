@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { register, login, loginWithGoogle, logout, getUserProfile } from '../lib/api';
+import { supabase } from '../lib/supabase';
 
 const AuthForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -14,9 +15,31 @@ const AuthForm: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setIsLoggedIn(true);
-      getUserProfile().then(setUserProfile).catch(console.error);
+      supabase.auth.setSession({ access_token: token, refresh_token: '' })
+        .then(({ data, error }) => {
+          if (!error && data.user) {
+            setIsLoggedIn(true);
+            getUserProfile().then(setUserProfile).catch(console.error);
+          }
+        });
     }
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Evento de autenticação:', event, session);
+      if (event === 'SIGNED_IN' && session) {
+        localStorage.setItem('token', session.access_token);
+        setIsLoggedIn(true);
+        getUserProfile().then(setUserProfile).catch(console.error);
+      } else if (event === 'SIGNED_OUT') {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        setUserProfile(null);
+      }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,16 +52,23 @@ const AuthForm: React.FC = () => {
         const data = await register(email, password, name, avatar || undefined);
         if (data.error) throw new Error(data.error);
         localStorage.setItem('token', data.token);
+        await supabase.auth.setSession({ access_token: data.token, refresh_token: '' });
         setMessage('Registro concluído!');
         setIsLoggedIn(true);
-        getUserProfile().then(setUserProfile).catch(console.error);
+        setUserProfile({
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.user_metadata.full_name || data.user.user_metadata.name,
+          avatar: data.user.user_metadata.avatar_url,
+        });
       } else {
         const data = await login(email, password);
         if (data.error) throw new Error(data.error);
         localStorage.setItem('token', data.token);
+        await supabase.auth.setSession({ access_token: data.token, refresh_token: '' });
         setMessage('Login bem-sucedido!');
         setIsLoggedIn(true);
-        getUserProfile().then(setUserProfile).catch(console.error);
+        setUserProfile(data.user); // Usar dados retornados pelo backend
       }
     } catch (error: any) {
       setMessage(error.message);
@@ -57,9 +87,14 @@ const AuthForm: React.FC = () => {
     try {
       const data = await logout();
       if (data.error) throw new Error(data.error);
+      await supabase.auth.signOut();
       localStorage.removeItem('token');
       setIsLoggedIn(false);
       setUserProfile(null);
+      setEmail('');
+      setPassword('');
+      setName('');
+      setAvatar('');
       setMessage('Logout realizado com sucesso!');
     } catch (error: any) {
       setMessage(error.message);

@@ -4,8 +4,8 @@ import { supabase } from './supabase';
 export const register = async (email: string, password: string, name: string, avatar?: string) => {
   try {
     console.log('Enviando registro:', { email, password, name, avatar });
-    const url = `${API_URL}/register`; // Garantir que a URL seja explícita
-    console.log('URL completa:', url); // Log para verificar
+    const url = `${API_URL}/register`;
+    console.log('URL completa:', url);
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -38,7 +38,7 @@ export const login = async (email: string, password: string) => {
     if (!response.ok) {
       throw new Error(responseText || 'Erro ao fazer login');
     }
-    return JSON.parse(responseText);
+    return JSON.parse(responseText); // Retorna { token, user }
   } catch (error) {
     console.error('Erro no fetch:', error);
     throw error;

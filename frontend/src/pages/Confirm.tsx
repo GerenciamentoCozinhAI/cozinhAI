@@ -26,12 +26,12 @@ const Confirm: React.FC = () => {
             const { user } = data;
             if (user) {
               console.log('Metadados do usuário:', user.user_metadata);
-              const googleName = user.user_metadata.display_name || user.user_metadata.name || 'Usuário sem nome';
+              const googleName = user.user_metadata.full_name || user.user_metadata.name || 'Usuário sem nome';
               const { error: insertError } = await supabase
                 .from('users')
                 .upsert({
                   id: user.id,
-                  name: googleName, // Apenas id e name
+                  name: googleName,
                 });
               if (insertError) console.error('Erro ao inserir usuário:', insertError.message);
               else console.log('Usuário inserido na tabela:', { id: user.id, name: googleName });
