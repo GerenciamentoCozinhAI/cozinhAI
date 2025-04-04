@@ -12,17 +12,32 @@ const Confirm: React.FC = () => {
     console.log('Hash:', hash);
     const params = new URLSearchParams(hash.replace('#', ''));
     const accessToken = params.get('access_token');
-    console.log('Access Token:', accessToken);
+    const refreshToken = params.get('refresh_token') || '';
 
     if (accessToken) {
-      supabase.auth.setSession({ access_token: accessToken, refresh_token: '' })
-        .then(({ data, error }) => {
+      supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+        .then(async ({ data, error }) => {
           if (error) {
             console.error('Erro ao confirmar:', error.message);
           } else {
             console.log('Sessão configurada:', data);
             localStorage.setItem('token', accessToken);
-            console.log('Email confirmado com sucesso!');
+
+            // Se for login com Google, inserir na tabela users
+            const { user } = data;
+            if (user) {
+              const { error: insertError } = await supabase
+                .from('users')
+                .upsert({
+                  id: user.id,
+                  email: user.email,
+                  name: user.user_metadata.display_name || 'Usuário Google',
+                  avatar: user.user_metadata.avatar_url || '',
+                });
+              if (insertError) console.error('Erro ao inserir usuário:', insertError.message);
+            }
+
+            console.log('Confirmação concluída!');
             navigate('/');
           }
         });
@@ -34,7 +49,7 @@ const Confirm: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <h2 className="text-2xl font-bold">Confirmando seu email...</h2>
+      <h2 className="text-2xl font-bold">Confirmando...</h2>
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { register, login, logout } from '../lib/api';
+import { register, login, loginWithGoogle, logout } from '../lib/api';
 
 const AuthForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [isRegister, setIsRegister] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,10 +21,11 @@ const AuthForm: React.FC = () => {
 
     try {
       if (isRegister) {
-        const data = await register(email, password, name);
+        const data = await register(email, password, name, avatar);
         if (data.error) throw new Error(data.error);
-        setMessage('Registro concluído! Confime seu email! Faça login para continuar.');
-        setIsRegister(false); // Volta para o modo login após registro
+        localStorage.setItem('token', data.token); // Token retornado diretamente
+        setMessage('Registro concluído!');
+        setIsLoggedIn(true);
       } else {
         const data = await login(email, password);
         if (data.error) throw new Error(data.error);
@@ -31,6 +33,14 @@ const AuthForm: React.FC = () => {
         setMessage('Login bem-sucedido!');
         setIsLoggedIn(true);
       }
+    } catch (error: any) {
+      setMessage(error.message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
     } catch (error: any) {
       setMessage(error.message);
     }
@@ -70,16 +80,28 @@ const AuthForm: React.FC = () => {
       </h2>
       <form onSubmit={handleSubmit}>
         {isRegister && (
-          <div className="mb-4">
-            <label className="block text-gray-700">Nome</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+          <>
+            <div className="mb-4">
+              <label className="block text-gray-700">Nome</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Avatar (URL)</label>
+              <input
+                type="text"
+                value={avatar}
+                onChange={(e) => setAvatar(e.target.value)}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://exemplo.com/imagem.jpg"
+              />
+            </div>
+          </>
         )}
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
@@ -108,6 +130,12 @@ const AuthForm: React.FC = () => {
           {isRegister ? 'Cadastrar' : 'Entrar'}
         </button>
       </form>
+      <button
+        onClick={handleGoogleLogin}
+        className="w-full mt-4 bg-gray-800 text-white p-2 rounded hover:bg-gray-900 transition duration-200"
+      >
+        {isRegister ? 'Cadastrar com Google' : 'Entrar com Google'}
+      </button>
       <p className="mt-2 text-center text-red-500">{message}</p>
       <button
         onClick={() => setIsRegister(!isRegister)}
