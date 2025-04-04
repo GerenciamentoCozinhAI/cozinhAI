@@ -21,9 +21,10 @@ const AuthForm: React.FC = () => {
 
     try {
       if (isRegister) {
-        const data = await register(email, password, name, avatar);
+        console.log('Dados enviados:', { email, password, name, avatar }); // Log para depuração
+        const data = await register(email, password, name, avatar || undefined);
         if (data.error) throw new Error(data.error);
-        localStorage.setItem('token', data.token); // Token retornado diretamente
+        localStorage.setItem('token', data.token);
         setMessage('Registro concluído!');
         setIsLoggedIn(true);
       } else {

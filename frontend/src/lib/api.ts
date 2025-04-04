@@ -1,18 +1,21 @@
-const API_URL = import.meta.env.API_URL as string;;
+const API_URL = import.meta.env.VITE_API_URL as string;;
 
 export const register = async (email: string, password: string, name: string, avatar?: string) => {
   try {
     console.log('Enviando registro:', { email, password, name, avatar });
-    const response = await fetch(`${API_URL}/register`, {
+    const url = `${API_URL}/register`; // Garantir que a URL seja explícita
+    console.log('URL completa:', url); // Log para verificar
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, name, avatar }),
     });
+    const responseText = await response.text();
+    console.log('Resposta bruta:', responseText);
     if (!response.ok) {
-      const errorData = await response.text();
-      throw new Error(errorData || 'Erro ao registrar');
+      throw new Error(responseText || 'Erro ao registrar');
     }
-    return response.json();
+    return JSON.parse(responseText);
   } catch (error) {
     console.error('Erro no fetch:', error);
     throw error;
@@ -22,16 +25,19 @@ export const register = async (email: string, password: string, name: string, av
 export const login = async (email: string, password: string) => {
   try {
     console.log('Enviando login:', { email, password });
-    const response = await fetch(`${API_URL}/login`, {
+    const url = `${API_URL}/login`;
+    console.log('URL completa:', url);
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
+    const responseText = await response.text();
+    console.log('Resposta bruta:', responseText);
     if (!response.ok) {
-      const errorData = await response.text();
-      throw new Error(errorData || 'Erro ao fazer login');
+      throw new Error(responseText || 'Erro ao fazer login');
     }
-    return response.json();
+    return JSON.parse(responseText);
   } catch (error) {
     console.error('Erro no fetch:', error);
     throw error;
@@ -40,13 +46,17 @@ export const login = async (email: string, password: string) => {
 
 export const loginWithGoogle = async () => {
   try {
-    const response = await fetch(`${API_URL}/google`);
+    console.log('Iniciando login com Google');
+    const url = `${API_URL}/google`;
+    console.log('URL completa:', url);
+    const response = await fetch(url);
+    const responseText = await response.text();
+    console.log('Resposta bruta:', responseText);
     if (!response.ok) {
-      const errorData = await response.text();
-      throw new Error(errorData || 'Erro ao iniciar login com Google');
+      throw new Error(responseText || 'Erro ao iniciar login com Google');
     }
-    const { url } = await response.json();
-    window.location.href = url; // Redireciona para o Google
+    const { url: googleUrl } = JSON.parse(responseText);
+    window.location.href = googleUrl;
   } catch (error) {
     console.error('Erro no fetch:', error);
     throw error;
@@ -56,15 +66,18 @@ export const loginWithGoogle = async () => {
 export const logout = async () => {
   try {
     console.log('Enviando logout');
-    const response = await fetch(`${API_URL}/logout`, {
+    const url = `${API_URL}/logout`;
+    console.log('URL completa:', url);
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
     });
+    const responseText = await response.text();
+    console.log('Resposta bruta:', responseText);
     if (!response.ok) {
-      const errorData = await response.text();
-      throw new Error(errorData || 'Erro ao fazer logout');
+      throw new Error(responseText || 'Erro ao fazer logout');
     }
-    return response.json();
+    return JSON.parse(responseText);
   } catch (error) {
     console.error('Erro no fetch:', error);
     throw error;
