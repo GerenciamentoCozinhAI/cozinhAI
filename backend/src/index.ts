@@ -1,15 +1,15 @@
+// src/index.ts
 import express from 'express';
-import cors from 'cors';
-import authRoutes from './routes/authRoutes';
+import dotenv from 'dotenv';
+import usersRoutes from './routes/users';
 
+dotenv.config();
 const app = express();
 
-app.use(cors()); // Permite requisições de outros domínios (ex.: localhost:5173)
 app.use(express.json());
+app.use('/users', usersRoutes);
 
-app.use('/auth', authRoutes);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+const port = process.env.PORT || 3333;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
