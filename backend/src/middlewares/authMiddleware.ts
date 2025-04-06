@@ -1,3 +1,5 @@
+//src/middlewares/authMiddleware.ts
+
 import { Request, Response, NextFunction } from 'express';
 import { getUserFromRequest } from '../utils/getUserFromRequest';
 

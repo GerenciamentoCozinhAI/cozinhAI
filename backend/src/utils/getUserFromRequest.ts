@@ -1,3 +1,4 @@
+// src/utils/getUserFromRequest.ts
 import { createClient } from '@supabase/supabase-js';
 
 export const getUserFromRequest = async (req: any) => {
