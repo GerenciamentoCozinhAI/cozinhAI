@@ -1,3 +1,4 @@
+//src/pages/Register.tsx
 import RegisterForm from '../components/RegisterForm';
 import { useAuth } from '../hooks/useAuth';
 
