@@ -40,7 +40,7 @@ type LoginData = {
         // Aqui você pode chamar seu loginUser()
         await loginUser(data);
         setSuccess('Login realizado com sucesso! Redirecionando...');
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/home'), 2000);
       } catch (err: any) {
         setError(err.message);
       }
