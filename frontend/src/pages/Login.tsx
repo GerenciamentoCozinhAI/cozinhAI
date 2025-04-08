@@ -1,5 +1,5 @@
 import LoginForm from '../components/LoginForm';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
   const { login, error, success } = useAuth();

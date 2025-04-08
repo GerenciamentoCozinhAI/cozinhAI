@@ -1,25 +1,25 @@
 //src/components/RegisterForm.tsx
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const registerSchema = z
   .object({
-    name: z.string().min(1, 'Nome é obrigatório'),
-    email: z.string().email('Email inválido'),
-    password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+    name: z.string().min(1, "Nome é obrigatório"),
+    email: z.string().email("Email inválido"),
+    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
     confirmPassword: z.string(),
-    avatar_url: z.string().url('URL inválida').optional().or(z.literal('')),
+    avatar_url: z.string().url("URL inválida").optional().or(z.literal("")),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'As senhas não coincidem',
-    path: ['confirmPassword'],
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
   });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 type Props = {
-  onSubmit: (data: Omit<RegisterFormData, 'confirmPassword'>) => void;
+  onSubmit: (data: Omit<RegisterFormData, "confirmPassword">) => void;
   error: string;
 };
 
@@ -47,11 +47,11 @@ export default function RegisterForm({ onSubmit, error }: Props) {
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
       {[
-        { label: 'Nome', name: 'name', type: 'text' },
-        { label: 'Email', name: 'email', type: 'email' },
-        { label: 'Senha', name: 'password', type: 'password' },
-        { label: 'Confirmar senha', name: 'confirmPassword', type: 'password' },
-        { label: 'Avatar URL (opcional)', name: 'avatar_url', type: 'text' },
+        { label: "Nome", name: "name", type: "text" },
+        { label: "Email", name: "email", type: "email" },
+        { label: "Senha", name: "password", type: "password" },
+        { label: "Confirmar senha", name: "confirmPassword", type: "password" },
+        { label: "Avatar URL (opcional)", name: "avatar_url", type: "text" },
       ].map((field) => (
         <div key={field.name} className="space-y-1">
           <label className="block text-sm font-medium">{field.label}</label>
@@ -62,7 +62,9 @@ export default function RegisterForm({ onSubmit, error }: Props) {
           />
           {errors[field.name as keyof RegisterFormData] && (
             <p className="text-red-500 text-sm">
-              {errors[field.name as keyof RegisterFormData]?.message?.toString()}
+              {errors[
+                field.name as keyof RegisterFormData
+              ]?.message?.toString()}
             </p>
           )}
         </div>
@@ -74,6 +76,12 @@ export default function RegisterForm({ onSubmit, error }: Props) {
       >
         Registrar
       </button>
+      <p className="text-sm text-center text-gray-600">
+        Já tem uma conta?{" "}
+        <a href="/login" className="text-blue-500 hover:underline">
+          Entrar
+        </a>
+      </p>
     </form>
   );
 }

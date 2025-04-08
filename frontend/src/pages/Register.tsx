@@ -1,6 +1,5 @@
-//src/pages/Register.tsx
 import RegisterForm from '../components/RegisterForm';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Register() {
   const { register, error, success } = useAuth();

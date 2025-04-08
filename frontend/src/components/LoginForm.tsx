@@ -1,10 +1,11 @@
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+//src/components/LoginForm.tsx
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  email: z.string().email("Email inválido"),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -35,7 +36,7 @@ export default function LoginForm({ onSubmit, error }: Props) {
       <div className="space-y-1">
         <label className="block text-sm font-medium">Email</label>
         <input
-          {...register('email')}
+          {...register("email")}
           type="email"
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
         />
@@ -47,7 +48,7 @@ export default function LoginForm({ onSubmit, error }: Props) {
       <div className="space-y-1">
         <label className="block text-sm font-medium">Senha</label>
         <input
-          {...register('password')}
+          {...register("password")}
           type="password"
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
         />
@@ -62,6 +63,12 @@ export default function LoginForm({ onSubmit, error }: Props) {
       >
         Entrar
       </button>
+      <p className="text-sm text-center text-gray-600">
+        Ainda não tem conta?{" "}
+        <a href="/register" className="text-blue-500 hover:underline">
+          Criar conta
+        </a>
+      </p>
     </form>
   );
 }
