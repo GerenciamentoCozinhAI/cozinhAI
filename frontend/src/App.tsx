@@ -1,16 +1,14 @@
-import { Routes, Route } from 'react-router-dom';
-import AuthForm from './components/AuthForm';
-import Confirm from './pages/Confirm';
+// src/App.tsx
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Routes>
-        <Route path="/" element={<AuthForm />} />
-        <Route path="/confirm" element={<Confirm />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigate to="/register" />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+    </Routes>
   );
 }
-
-export default App;
