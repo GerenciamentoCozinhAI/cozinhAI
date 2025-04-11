@@ -1,11 +1,12 @@
 // src/routes/users.ts
 import { Router } from 'express';
 import { authMiddleware } from '../middlewares/authMiddleware';
-import { getMyUser, updateFavorites } from '../controllers/usersController';
+import { deleteMyUser, getMyUser, updateMyUser } from '../controllers/usersController';
 
 const router = Router();
 
 router.get('/me', authMiddleware, getMyUser);
-router.put('/favorites', authMiddleware, updateFavorites);
+router.put('/user', authMiddleware, updateMyUser);
+router.delete('/user', authMiddleware, deleteMyUser);
 
 export default router;
