@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { prisma } from "../services/prisma";
 
 // GET: Buscar informações do auth.users
-export const getMyUser = async (req: Request, res: Response): Promise<any> => {
+export const getMyUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = (req as any).user;
     const supabase = (req as any).supabase;
@@ -12,13 +12,13 @@ export const getMyUser = async (req: Request, res: Response): Promise<any> => {
     const { data, error } = await supabase.auth.admin.getUserById(user.id);
 
     if (error) {
-      return res.status(500).json({ error: error.message });
+      res.status(500).send({ error: error.message });
     }
 
-    return res.json(data);
+    res.send(data);
   } catch (err) {
     console.error("Unexpected error in getMyUser:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).send({ error: "Internal server error" });
   }
 };
 
@@ -26,7 +26,7 @@ export const getMyUser = async (req: Request, res: Response): Promise<any> => {
 export const updateMyUser = async (
   req: Request,
   res: Response
-): Promise<any> => {
+): Promise<void> => {
   try {
     const user = (req as any).user;
     const supabase = (req as any).supabase;
@@ -40,7 +40,7 @@ export const updateMyUser = async (
     });
 
     if (authError) {
-      return res.status(500).json({ error: authError.message });
+      res.status(500).send({ error: authError.message });
     }
 
     // Atualizar informações parciais no banco de dados Prisma
@@ -54,18 +54,18 @@ export const updateMyUser = async (
         },
       });
 
-      return res.json({
+      res.send({
         message: "User updated successfully",
         authUser: authData,
         prismaUser: updatedUser,
       });
     } catch (prismaError) {
       console.error("Error updating user in Prisma:", prismaError);
-      return res.status(500).json({ error: "Failed to update user in database" });
+      res.status(500).send({ error: "Failed to update user in database" });
     }
   } catch (err) {
     console.error("Unexpected error in updateMyUser:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).send({ error: "Internal server error" });
   }
 };
 
@@ -73,7 +73,7 @@ export const updateMyUser = async (
 export const deleteMyUser = async (
   req: Request,
   res: Response
-): Promise<any> => {
+): Promise<void> => {
   try {
     const user = (req as any).user;
     const supabase = (req as any).supabase;
@@ -83,7 +83,7 @@ export const deleteMyUser = async (
 
     if (authError) {
       console.error("Error deleting user from auth.users:", authError.message);
-      return res.status(500).json({ error: "Failed to delete user from auth.users" });
+      res.status(500).send({ error: "Failed to delete user from auth.users" });
     }
 
     // Remover usuário do banco de dados Prisma
@@ -91,12 +91,12 @@ export const deleteMyUser = async (
       await prisma.user.delete({ where: { id: user.id } });
     } catch (prismaError) {
       console.error("Error deleting user from Prisma:", prismaError);
-      return res.status(500).json({ error: "Failed to delete user from Prisma database" });
+      res.status(500).send({ error: "Failed to delete user from Prisma database" });
     }
 
-    return res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).send({ message: "User deleted successfully" });
   } catch (err) {
     console.error("Unexpected error in deleteMyUser:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).send({ error: "Internal server error" });
   }
 };
