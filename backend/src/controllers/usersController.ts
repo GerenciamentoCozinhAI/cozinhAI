@@ -22,7 +22,7 @@ export const getMyUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-// PUT: Atualizar informações no auth.users
+// PATCH: Atualizar informações parciais no auth.users
 export const updateMyUser = async (
   req: Request,
   res: Response
@@ -32,25 +32,25 @@ export const updateMyUser = async (
     const supabase = (req as any).supabase;
     const { email, phone, user_metadata, name, avatar } = req.body;
 
-    // Atualizar informações no auth.users
+    // Atualizar informações parciais no auth.users
     const { data: authData, error: authError } = await supabase.auth.admin.updateUserById(user.id, {
-      email,
-      phone,
-      user_metadata,
+      ...(email && { email }),
+      ...(phone && { phone }),
+      ...(user_metadata && { user_metadata }),
     });
 
     if (authError) {
       return res.status(500).json({ error: authError.message });
     }
 
-    // Atualizar informações no banco de dados Prisma
+    // Atualizar informações parciais no banco de dados Prisma
     try {
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
-          email,
-          name,
-          avatar,
+          ...(email && { email }),
+          ...(name && { name }),
+          ...(avatar && { avatar }),
         },
       });
 
