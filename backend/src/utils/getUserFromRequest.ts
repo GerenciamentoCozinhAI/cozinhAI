@@ -1,24 +1,39 @@
-// src/utils/getUserFromRequest.ts
+//src/utils/getUserFromRequest.ts
+
 import { createClient } from '@supabase/supabase-js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseADMKey = process.env.SUPABASE_KEY_ADM!;
+
+// Instância reutilizável do cliente Supabase
+const supabase = createClient(supabaseUrl, supabaseADMKey);
+
 export const getUserFromRequest = async (req: any) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return null;
-
-  const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_KEY_ANON!,
-    {
-      global: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      console.warn('Authorization token not provided');
+      return null;
     }
-  );
 
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) return null;
+    // Configura o cabeçalho de autorização dinamicamente
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error) {
+      console.error('Error fetching user:', error.message);
+      return null;
+    }
 
-  return { user: data.user, supabase };
+    if (!data?.user) {
+      console.warn('User not found');
+      return null;
+    }
+
+    return { user: data.user, supabase };
+  } catch (err) {
+    console.error('Unexpected error in getUserFromRequest:', err);
+    return null;
+  }
 };
