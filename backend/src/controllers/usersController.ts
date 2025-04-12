@@ -22,6 +22,55 @@ export const getMyUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// PUT: Substituir completamente as informações do usuário
+export const replaceMyUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user = (req as any).user;
+    const supabase = (req as any).supabase;
+    const { email, phone, user_metadata, name, avatar } = req.body;
+
+    // Substituir informações no auth.users
+    const { data: authData, error: authError } = await supabase.auth.admin.updateUserById(user.id, {
+      email,
+      phone,
+      user_metadata,
+    });
+
+    if (authError) {
+      res.status(500).send({ error: authError.message });
+      return;
+    }
+
+    // Substituir informações no banco de dados Prisma
+    try {
+      const replacedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          email,
+          name,
+          avatar,
+        },
+      });
+
+      res.send({
+        message: "User replaced successfully",
+        authUser: authData,
+        prismaUser: replacedUser,
+      });
+    } catch (prismaError) {
+      console.error("Error replacing user in Prisma:", prismaError);
+      res.status(500).send({ error: "Failed to replace user in database" });
+    }
+  } catch (err) {
+    console.error("Unexpected error in replaceMyUser:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+};
+
+
 // PATCH: Atualizar informações parciais no auth.users
 export const updateMyUser = async (
   req: Request,
