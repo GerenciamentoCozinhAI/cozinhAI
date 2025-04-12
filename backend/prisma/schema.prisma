@@ -13,36 +13,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
+model User {
   id        String   @id
-  name      String  @db.VarChar(255)
+  name      String   @db.VarChar(255)
   email     String   @unique @db.VarChar(255)
   avatar    String?
   createdAt DateTime @default(now())
   recipes   Recipe[] @relation("UserRecipes")
+  likes     Like[]   @relation("UserLikes") // Relacionamento com likes
 }
 
 model Recipe {
-  id        String   @id @default(cuid())
-  title     String   @db.VarChar(255)
-  description String? @db.Text
-  difficulty Difficulty
+  id          String   @id @default(cuid())
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  difficulty  Difficulty
   instructions String? @db.Text
   ingredients  Recipe_Ingredients[]
-  prepTime  Int?
-  servings   Int?
-  image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  prepTime    Int?
+  servings    Int?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], name: "UserRecipes")
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], name: "UserRecipes")
+  likes       Like[]   @relation("RecipeLikes") // Relacionamento com likes
 }
 
 enum Difficulty {
   Fácil
   Médio
   Difícil
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  recipeId  String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], name: "UserLikes")
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], name: "RecipeLikes")
+
+  @@unique([userId, recipeId]) // Garante que um usuário só pode dar um like por receita
 }
 
 model Recipe_Ingredients {
