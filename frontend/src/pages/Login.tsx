@@ -1,4 +1,4 @@
-import LoginForm from '../components/LoginForm';
+import LoginForm from '../components/auth/LoginForm';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {

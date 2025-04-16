@@ -2,27 +2,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser, loginUser } from '../services/authService';
-
-type AuthContextType = {
-  isAuthenticated: boolean;
-  register: (data: RegisterData) => Promise<void>;
-  login: (data: LoginData) => Promise<void>;
-  logout: () => void;
-  error: string;
-  success: string;
-};
-
-type RegisterData = {
-  name: string;
-  email: string;
-  password: string;
-  avatar_url?: string;
-};
-
-type LoginData = {
-  email: string;
-  password: string;
-};
+import { RegisterData, LoginData, AuthContextType } from '../types/authTypes';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
