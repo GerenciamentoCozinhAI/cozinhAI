@@ -84,15 +84,6 @@ export default function LoginForm({ onSubmit, error }: Props) {
           {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
         </div>
 
-        <div className="flex justify-end">
-          <a
-            href="/forgot-password"
-            className="text-sm text-green-600 hover:text-green-800 hover:underline transition-colors"
-          >
-            Esqueceu sua senha?
-          </a>
-        </div>
-
         <button
           type="submit"
           className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors duration-300 font-medium shadow-sm hover:shadow"
