@@ -93,3 +93,19 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).send({ error: "Internal server error" });
   }
 };
+
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      res.status(500).send({ error: "Failed to log out" });
+      return;
+    }
+
+    res.status(200).send({ message: "Logout successful" });
+  } catch (err) {
+    console.error("Unexpected error in logout:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+};
