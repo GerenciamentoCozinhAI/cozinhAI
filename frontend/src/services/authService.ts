@@ -1,13 +1,7 @@
 //src/services/authService.ts
-
+import { RegisterPayload } from '../types/authTypes';
 const apiURL = import.meta.env.VITE_API_URL;
 
-type RegisterPayload = {
-  name: string;
-  email: string;
-  password: string;
-  avatar_url?: string;
-};
 
 export async function registerUser(data: RegisterPayload) {
   const res = await fetch(`${apiURL}/auth/register`, {
