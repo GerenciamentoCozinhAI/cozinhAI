@@ -39,9 +39,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    navigate('/login');
+    try {
+      localStorage.removeItem('token');
+      setIsAuthenticated(false);
+      setError('');
+      setSuccess('Logout realizado com sucesso!');
+      navigate('/login');
+    } catch (err: any) {
+      setError('Erro ao realizar logout. Tente novamente.');
+    }
   };
 
   return (
