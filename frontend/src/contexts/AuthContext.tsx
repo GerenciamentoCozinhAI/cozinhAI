@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError('');
       setSuccess('');
       const res = await loginUser(data);
-      localStorage.setItem('token', res.token);
+      localStorage.setItem('token', res.session.access_token);
       setIsAuthenticated(true);
       setSuccess('Login realizado com sucesso!');
       setTimeout(() => navigate('/home'), 2000);
