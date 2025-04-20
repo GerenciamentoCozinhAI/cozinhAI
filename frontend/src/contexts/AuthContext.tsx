@@ -1,7 +1,7 @@
 // src/contexts/AuthContext.tsx
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser, loginUser } from '../services/authService';
+import { registerUser, loginUser, logoutUser } from '../services/authService';
 import { RegisterData, LoginData, AuthContextType } from '../types/authTypes';
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -38,15 +38,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     try {
+      await logoutUser(); // Chamar o serviço de logout
       localStorage.removeItem('token');
       setIsAuthenticated(false);
       setError('');
       setSuccess('Logout realizado com sucesso!');
       navigate('/login');
     } catch (err: any) {
-      setError('Erro ao realizar logout. Tente novamente.');
+      setError(err.message || 'Erro ao realizar logout. Tente novamente.');
     }
   };
 

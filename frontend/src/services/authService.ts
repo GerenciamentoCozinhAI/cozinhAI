@@ -29,3 +29,19 @@ export async function loginUser(data: { email: string; password: string }) {
     return json;
   }
   
+  export async function logoutUser() {
+    const token = localStorage.getItem('token'); // Recuperar o token do localStorage
+  
+    const res = await fetch(`${apiURL}/auth/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Passar o token no cabeçalho
+      },
+    });
+  
+    const json = await res.json();
+
+    if (!res.ok) throw new Error(json.error || 'Erro ao fazer logout');
+    return json;
+  }
