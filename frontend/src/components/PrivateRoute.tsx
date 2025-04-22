@@ -7,5 +7,5 @@ type Props = {
 
 export default function PrivateRoute({ children }: Props) {
   const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/auth-error" />;
 }

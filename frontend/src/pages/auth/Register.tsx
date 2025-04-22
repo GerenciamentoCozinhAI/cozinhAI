@@ -1,7 +1,7 @@
 //src/components/pages/Register.tsx
 
-import RegisterForm from "../components/auth/RegisterForm"
-import { useAuth } from "../contexts/AuthContext"
+import RegisterForm from "../../components/auth/RegisterForm"
+import { useAuth } from "../../contexts/AuthContext"
 
 export default function Register() {
   const { register, error, success } = useAuth()

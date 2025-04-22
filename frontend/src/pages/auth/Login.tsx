@@ -1,7 +1,7 @@
 //src/components/pages/Login.tsx
 
-import LoginForm from "../components/auth/LoginForm"
-import { useAuth } from "../contexts/AuthContext"
+import LoginForm from "../../components/auth/LoginForm"
+import { useAuth } from "../../contexts/AuthContext"
 
 export default function Login() {
   const { login, error, success } = useAuth()
