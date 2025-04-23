@@ -1,11 +1,11 @@
 // src/contexts/AuthContext.tsx
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser, loginUser, logoutUser, googleAuth } from '../services/authService';
+import { registerUser, loginUser, logoutUser} from '../services/authService';
 import { RegisterData, LoginData, AuthContextType } from '../types/authTypes';
 import { supabase } from '../services/supabase'; // Importando o cliente do Supabase
 
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
+const frontendURL = import.meta.env.VITE_FRONTEND_URL; // URL do frontend, para redirecionamento após login
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -54,7 +54,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const loginWithGoogle = async () => {
-    
+    try {
+      setError('');
+      setSuccess('');
+  
+      // Inicia o login com Google - isso redireciona o usuário
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${frontendURL}/auth/callback`, // URL de retorno após o login
+        },
+      });
+  
+      if (error) throw new Error(error.message);
+  
+      // A partir daqui, nada mais vai ser executado imediatamente,
+      // porque o usuário será redirecionado para o Google.
+      // O restante deve acontecer na página de retorno após o login (ex: /callback ou /home)
+  
+    } catch (err: any) {
+      setError(err.message || 'Erro ao realizar login com Google. Tente novamente.');
+    }
   };
 
   return (

@@ -46,11 +46,23 @@ export async function logoutUser() {
   return json;
 }
 
-export async function googleAuth(data: { id: string; email: string; full_name?: string; avatar_url?: string }) {
+export async function googleAuth() {
+  
+  const { data: user, error } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    throw new Error(error?.message || "Erro ao obter usuário do Supabase");
+  }
+
   const res = await fetch(`${apiURL}/auth/google`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      id: user.user.id,
+      email: user.user.email,
+      full_name: user.user.user_metadata.full_name,
+      avatar_url: user.user.user_metadata.avatar_url,
+    }),
   });
 
   const json = await res.json();
