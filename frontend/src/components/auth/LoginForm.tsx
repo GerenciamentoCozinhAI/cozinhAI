@@ -4,6 +4,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import { useState } from "react"
+import GoogleButton from "./GoogleButton"
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -94,6 +95,10 @@ export default function LoginForm({ onSubmit, error }: Props) {
         <div className="relative flex items-center justify-center mt-6">
           <div className="border-t border-green-200 absolute w-full"></div>
           <div className="bg-white px-4 relative text-green-500 text-sm">ou</div>
+        </div>
+
+        <div className="flex justify-center">
+          <GoogleButton />
         </div>
 
         <p className="text-sm text-center text-gray-600">
