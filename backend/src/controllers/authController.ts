@@ -109,36 +109,3 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     res.status(500).send({ error: "Internal server error" });
   }
 };
-
-export const googleAuth = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { id, email, full_name, avatar_url } = req.body;
-
-    if (!id || !email) {
-      res.status(400).send({ error: "Dados do usuário incompletos." });
-      return;
-    }
-
-    // Verificar se o usuário já existe no banco de dados
-    let user = await prisma.user.findUnique({
-      where: { id },
-    });
-
-    // Se o usuário não existir, criá-lo
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          id,
-          email,
-          name: full_name || "Usuário",
-          avatar: avatar_url || null,
-        },
-      });
-    }
-
-    res.status(200).send({ message: "Usuário sincronizado com sucesso.", user });
-  } catch (err) {
-    console.error("Erro ao sincronizar usuário com o banco de dados:", err);
-    res.status(500).send({ error: "Erro interno no servidor." });
-  }
-};
