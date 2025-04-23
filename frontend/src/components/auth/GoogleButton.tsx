@@ -8,7 +8,7 @@ const GoogleButton: React.FC = () => {
     const handleLogin = async () => {
         try {
             await loginWithGoogle();
-            console.log("Login iniciado pelo botão!");
+
         } catch (error) {
             console.error("Erro ao fazer login com o Google:", error);
         }
