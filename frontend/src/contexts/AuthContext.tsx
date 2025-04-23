@@ -1,9 +1,11 @@
 // src/contexts/AuthContext.tsx
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser, loginUser, logoutUser } from '../services/authService';
+import { registerUser, loginUser, logoutUser, googleAuth } from '../services/authService';
 import { RegisterData, LoginData, AuthContextType } from '../types/authTypes';
+import { supabase } from '../services/supabase'; // Importando o cliente do Supabase
 
+const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -18,7 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSuccess('');
       await registerUser(data);
       setSuccess('Registro realizado com sucesso!');
-      setTimeout(() => navigate('/login'), 2000);
+      setTimeout(() => navigate('/login'), 1000);
     } catch (err: any) {
       setError(err.message);
     }
@@ -32,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('token', res.session.access_token);
       setIsAuthenticated(true);
       setSuccess('Login realizado com sucesso!');
-      setTimeout(() => navigate('/home'), 2000);
+      setTimeout(() => navigate('/home'), 1000);
     } catch (err: any) {
       setError(err.message);
     }
@@ -45,15 +47,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(false);
       setError('');
       setSuccess('Logout realizado com sucesso!');
-      navigate('/login');
+      setTimeout(() => navigate('/login'), 1000);
     } catch (err: any) {
       setError(err.message || 'Erro ao realizar logout. Tente novamente.');
     }
   };
 
+  const loginWithGoogle = async () => {
+    
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, register, login, logout, error, success }}
+      value={{ isAuthenticated, register, login, loginWithGoogle, logout, error, success }}
     >
       {children}
     </AuthContext.Provider>

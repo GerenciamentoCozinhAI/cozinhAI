@@ -1,11 +1,12 @@
-export type AuthContextType = {
+export interface AuthContextType {
   isAuthenticated: boolean;
   register: (data: RegisterData) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
-  logout: () => void;
+  loginWithGoogle: () => Promise<void>; // Added loginWithGoogle
+  logout: () => Promise<void>;
   error: string;
   success: string;
-};
+}
 
 export type RegisterData = {
   name: string;
