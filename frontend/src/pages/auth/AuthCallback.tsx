@@ -22,8 +22,10 @@ const AuthCallback = () => {
         return;
       }
 
-      const { error: authError } = await googleAuth();
-      if (authError) {
+      try {
+        await googleAuth();
+      } catch (authError) {
+        console.error('Erro ao autenticar com Google:', authError.message);
         setError(authError.message);
         return;
       }
