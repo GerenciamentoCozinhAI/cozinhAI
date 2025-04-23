@@ -1,5 +1,6 @@
 export interface AuthContextType {
   isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
   register: (data: RegisterData) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
   loginWithGoogle: () => Promise<void>; // Added loginWithGoogle

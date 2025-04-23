@@ -1,5 +1,5 @@
 // src/contexts/AuthContext.tsx
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser, loginUser, logoutUser} from '../services/authService';
 import { RegisterData, LoginData, AuthContextType } from '../types/authTypes';
@@ -13,6 +13,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    syncAuthState();
+  }, []);
 
   const register = async (data: RegisterData) => {
     try {
@@ -71,15 +75,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // A partir daqui, nada mais vai ser executado imediatamente,
       // porque o usuário será redirecionado para o Google.
       // O restante deve acontecer na página de retorno após o login (ex: /callback ou /home)
-  
+      await syncAuthState();
     } catch (err: any) {
       setError(err.message || 'Erro ao realizar login com Google. Tente novamente.');
     }
   };
 
+  const syncAuthState = async () => {
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) throw new Error(error.message);
+      if (data?.session) {
+        localStorage.setItem('token', data.session.access_token);
+        setIsAuthenticated(true);
+      } else {
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Erro ao sincronizar estado de autenticação.');
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, register, login, loginWithGoogle, logout, error, success }}
+      value={{ isAuthenticated, setIsAuthenticated, register, login, loginWithGoogle, logout, error, success }}
     >
       {children}
     </AuthContext.Provider>
