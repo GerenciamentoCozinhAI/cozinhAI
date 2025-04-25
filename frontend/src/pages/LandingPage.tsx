@@ -5,14 +5,26 @@ export default function LandingPage() {
 
     return (
       <div className="min-h-screen flex flex-col items-center bg-green-50 text-gray-800">
-        <header className="w-full bg-green-700 text-white py-8 text-center">
+        <header className="w-full bg-green-700 text-white py-8 text-center relative">
           <h1 className="text-4xl font-bold">Bem-vindo ao CozinhAI</h1>
           <p className="mt-2 text-lg">Descubra e crie receitas de forma prática!</p>
           <button
-          onClick={() => navigate('/home')} 
-          className="mt-4 px-6 py-2 bg-white text-green-700 font-semibold rounded hover:bg-gray-100 transition-colors">
+            onClick={() => navigate('/home')} 
+            className="mt-4 px-6 py-2 bg-white text-green-700 font-semibold rounded hover:bg-gray-200 transition-colors">
             Começar Agora
           </button>
+          <div className="absolute top-4 right-4 flex space-x-4">
+            <button
+              onClick={() => navigate('/login')}
+              className="px-1 py-1 bg-white text-green-700 font-bold rounded hover:bg-gray-200 transition-colors text-sm">
+              Entrar
+            </button>
+            <button
+              onClick={() => navigate('/register')}
+              className="px-1 py-1 bg-white text-green-700 font-bold rounded hover:bg-gray-200 transition-colors text-sm">
+              Registrar-se
+            </button>
+          </div>
         </header>
   
         <main className="w-full py-12 px-4">
@@ -120,7 +132,7 @@ export default function LandingPage() {
               </p>
               <button
                 onClick={() => navigate('/login')}
-                className="px-8 py-3 bg-white text-green-700 font-bold rounded-lg hover:bg-gray-100 transition-colors text-lg"
+                className="px-8 py-3 bg-white text-green-700 font-bold rounded-lg hover:bg-gray-200 transition-colors text-lg"
               >
                 Experimente Gratuitamente
               </button>
