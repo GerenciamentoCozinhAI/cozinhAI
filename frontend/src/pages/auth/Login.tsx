@@ -20,7 +20,7 @@ export default function Login() {
       </div>
 
       <div className="bg-white py-4 text-center text-gray-600 border-t border-gray-200">
-        <p>© 2025 CozinhAI. Todos os direitos reservados.</p>
+        <p>&copy; 2025 CozinhAI. Todos os direitos reservados.</p>
       </div>
     </div>
   )

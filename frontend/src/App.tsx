@@ -5,6 +5,7 @@ import Login from './pages/auth/Login';
 import AuthCallback from './pages/auth/AuthCallback';
 import AuthError from './pages/errors/AuthError';
 import Home from './pages/Home';
+import LandingPage from './pages/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute'; 
 
@@ -13,6 +14,15 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
       
+      <Route
+        path="/landing"
+        element={
+          <PublicRoute>
+            <LandingPage />
+          </PublicRoute>
+        }
+      />
+
       <Route
         path="/register"
         element={
