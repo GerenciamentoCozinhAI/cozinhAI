@@ -78,25 +78,35 @@ export default function LandingPage() {
   
           <section className="mt-16 max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-green-800 mb-6">Como o CozinhAI funciona</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
-                  1
-                </div>
-                <h3 className="text-xl font-semibold text-green-700">Descreva o que deseja</h3>
-                <p className="mt-2 text-gray-600">
-                  Informe os ingredientes que você tem ou o tipo de prato que deseja preparar.
-                </p>
+              <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                1
               </div>
-  
+              <h3 className="text-xl font-semibold text-green-700">Descreva o que deseja</h3>
+              <p className="mt-2 text-gray-600">
+                Informe os ingredientes que você tem ou o tipo de prato que deseja preparar.
+              </p>
+              </div>
+        
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
-                  2
-                </div>
-                <h3 className="text-xl font-semibold text-green-700">Receba sugestões</h3>
-                <p className="mt-2 text-gray-600">
-                  Nossa IA irá gerar receitas personalizadas com base nas suas preferências.
-                </p>
+              <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                2
+              </div>
+              <h3 className="text-xl font-semibold text-green-700">Receba sugestões</h3>
+              <p className="mt-2 text-gray-600">
+                Nossa IA irá gerar receitas personalizadas com base nas suas preferências.
+              </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                3
+              </div>
+              <h3 className="text-xl font-semibold text-green-700">Receitas da comunidade</h3>
+              <p className="mt-2 text-gray-600">
+                Nossa comunidade tem um banco de receitas esperando por você.
+              </p>
               </div>
             </div>
           </section>
@@ -104,11 +114,12 @@ export default function LandingPage() {
           <section className="mt-16 bg-green-600 text-white py-12 px-4 rounded-lg max-w-5xl mx-auto">
             <div className="text-center">
               <h2 className="text-3xl font-bold mb-4">Pronto para começar a cozinhar?</h2>
+              <h3 className="text-2xl font-bold mb-4">Use nosso site para gerar sua receita</h3>
               <p className="text-lg mb-6 max-w-2xl mx-auto">
                 Junte-se a outras pessoas que já estão usando o CozinhAI para criar refeições deliciosas.
               </p>
               <button
-                onClick={() => navigate('/home')}
+                onClick={() => navigate('/login')}
                 className="px-8 py-3 bg-white text-green-700 font-bold rounded-lg hover:bg-gray-100 transition-colors text-lg"
               >
                 Experimente Gratuitamente
