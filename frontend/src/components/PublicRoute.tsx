@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
+import Loading from "./loading/loading"; // Importando o componente de loading
 
 export default function PublicRoute({
   children,
@@ -21,13 +22,13 @@ export default function PublicRoute({
       } catch (err) {
         console.error("Unexpected error:", err);
       } finally {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 1000);
       }
     };
     checkAuth();
   }, []);
 
-  if (loading) return <div>Carregando...</div>;
+  if (loading) return <Loading />;
 
   return !isAuthenticated ? <>{children}</> : <Navigate to="/" />;
 }
