@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useEffect, useState } from "react";
-import { supabase } from "../services/supabase";
-import Loading from "./loading/loading"; // Importando o componente de loading
+import { supabase } from "../../services/supabase";
+import Loading from "../loading/loading"; // Importando o componente de loading
 
 export default function PublicRoute({
   children,
