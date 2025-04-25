@@ -6,8 +6,8 @@ import AuthCallback from "./pages/auth/AuthCallback";
 import AuthError from "./pages/errors/AuthError";
 import Home from "./pages/Home";
 import LandingPage from "./pages/LandingPage";
-import PrivateRoute from "./components/PrivateRoute";
-import PublicRoute from "./components/PublicRoute";
+import PrivateRoute from "./components/routes/PrivateRoute";
+import PublicRoute from "./components/routes/PublicRoute";
 
 export default function App() {
   return (
