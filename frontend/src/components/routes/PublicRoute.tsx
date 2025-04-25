@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useEffect, useState } from "react";
-import { supabase } from "../services/supabase"; // Importando o cliente do Supabase
+import { supabase } from "../../services/supabase";
+import Loading from "../loading/loading"; // Importando o componente de loading
 
-export default function PrivateRoute({
+export default function PublicRoute({
   children,
 }: {
   children: React.ReactNode;
@@ -21,13 +22,13 @@ export default function PrivateRoute({
       } catch (err) {
         console.error("Unexpected error:", err);
       } finally {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 1000);
       }
     };
     checkAuth();
   }, []);
 
-  if (loading) return <div>Carregando...</div>;
+  if (loading) return <Loading />;
 
-  return isAuthenticated ? <>{children}</> : <Navigate to="/auth-error" />;
+  return !isAuthenticated ? <>{children}</> : <Navigate to="/" />;
 }
