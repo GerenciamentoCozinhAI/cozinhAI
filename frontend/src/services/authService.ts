@@ -1,5 +1,5 @@
 //src/services/authService.ts
-import { supabase } from "./supabase"; // Importando o cliente do Supabase
+import { supabase } from "../lib/supabase"; // Importando o cliente do Supabase
 import { RegisterPayload } from "../types/authTypes";
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -47,7 +47,6 @@ export async function logoutUser() {
 }
 
 export async function googleAuth() {
-  
   const { data: user, error } = await supabase.auth.getUser();
 
   if (error || !user) {

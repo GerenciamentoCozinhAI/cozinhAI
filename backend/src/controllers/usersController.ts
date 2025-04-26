@@ -9,13 +9,34 @@ export const getMyUser = async (req: Request, res: Response): Promise<void> => {
     const supabase = (req as any).supabase;
 
     // Buscar informações do auth.users
-    const { data, error } = await supabase.auth.admin.getUserById(user.id);
+    const { data: supabaseUser, error } = await supabase.auth.admin.getUserById(
+      user.id
+    );
 
-    if (error) {
-      res.status(500).send({ error: error.message });
+    if (supabaseUser) {
+      res.send(supabaseUser);
+      return;
     }
 
-    res.send(data);
+    if (error) {
+      console.error("Error fetching user from auth.users:", error.message);
+    }
+
+    // Caso não consiga pegar do auth.users, buscar informações do Prisma
+    try {
+      const prismaUser = await prisma.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (prismaUser) {
+        res.send(prismaUser);
+        return;
+      }
+    } catch (prismaError) {
+      console.error("Error fetching user from Prisma:", prismaError);
+    }
+
+    res.status(404).send({ error: "User not found" });
   } catch (err) {
     console.error("Unexpected error in getMyUser:", err);
     res.status(500).send({ error: "Internal server error" });
@@ -32,27 +53,38 @@ export const replaceMyUser = async (
     const supabase = (req as any).supabase;
     const { email, phone, user_metadata, name, avatar } = req.body;
 
-    // Substituir informações no auth.users
-    const { data: authData, error: authError } = await supabase.auth.admin.updateUserById(user.id, {
-      email,
-      phone,
-      user_metadata,
-    });
+    // Preparar o payload para o Supabase
+    const supabaseUpdateData: any = {};
+    if (email) supabaseUpdateData.email = email;
+    if (phone) supabaseUpdateData.phone = phone;
+    if (user_metadata || name || avatar) {
+      supabaseUpdateData.user_metadata = {
+        ...(user_metadata || {}),
+        ...(name && { full_name: name, name: name }),
+        ...(avatar && { avatar_url: avatar, picture: avatar }),
+      };
+    }
+
+    // Atualizar informações no auth.users
+    const { data: authData, error: authError } =
+      await supabase.auth.admin.updateUserById(user.id, supabaseUpdateData);
 
     if (authError) {
+      console.error("Error replacing user in auth.users:", authError);
       res.status(500).send({ error: authError.message });
       return;
     }
 
-    // Substituir informações no banco de dados Prisma
+    // Atualizar informações no banco de dados Prisma
     try {
+      const prismaUpdateData: any = {};
+      if (email) prismaUpdateData.email = email;
+      if (name) prismaUpdateData.name = name;
+      if (avatar) prismaUpdateData.avatar = avatar;
+
       const replacedUser = await prisma.user.update({
         where: { id: user.id },
-        data: {
-          email,
-          name,
-          avatar,
-        },
+        data: prismaUpdateData,
       });
 
       res.send({
@@ -70,8 +102,7 @@ export const replaceMyUser = async (
   }
 };
 
-
-// PATCH: Atualizar informações parciais no auth.users
+// PATCH: Atualizar informações parciais no auth.users e Prisma
 export const updateMyUser = async (
   req: Request,
   res: Response
@@ -81,26 +112,38 @@ export const updateMyUser = async (
     const supabase = (req as any).supabase;
     const { email, phone, user_metadata, name, avatar } = req.body;
 
-    // Atualizar informações parciais no auth.users
-    const { data: authData, error: authError } = await supabase.auth.admin.updateUserById(user.id, {
-      ...(email && { email }),
-      ...(phone && { phone }),
-      ...(user_metadata && { user_metadata }),
-    });
-
-    if (authError) {
-      res.status(500).send({ error: authError.message });
+    // Preparar o payload para o Supabase
+    const supabaseUpdateData: any = {};
+    if (email) supabaseUpdateData.email = email;
+    if (phone) supabaseUpdateData.phone = phone;
+    if (user_metadata || name || avatar) {
+      supabaseUpdateData.user_metadata = {
+        ...(user_metadata || {}),
+        ...(name && { full_name: name, name: name }),
+        ...(avatar && { avatar_url: avatar, picture: avatar }),
+      };
     }
 
-    // Atualizar informações parciais no banco de dados Prisma
+    // Atualizar informações no auth.users
+    const { data: authData, error: authError } =
+      await supabase.auth.admin.updateUserById(user.id, supabaseUpdateData);
+
+    if (authError) {
+      console.error("Error updating user in auth.users:", authError);
+      res.status(500).send({ error: authError.message });
+      return;
+    }
+
+    // Atualizar informações no banco de dados Prisma
     try {
+      const prismaUpdateData: any = {};
+      if (email) prismaUpdateData.email = email;
+      if (name) prismaUpdateData.name = name;
+      if (avatar) prismaUpdateData.avatar = avatar;
+
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
-        data: {
-          ...(email && { email }),
-          ...(name && { name }),
-          ...(avatar && { avatar }),
-        },
+        data: prismaUpdateData,
       });
 
       res.send({
@@ -140,7 +183,9 @@ export const deleteMyUser = async (
       await prisma.user.delete({ where: { id: user.id } });
     } catch (prismaError) {
       console.error("Error deleting user from Prisma:", prismaError);
-      res.status(500).send({ error: "Failed to delete user from Prisma database" });
+      res
+        .status(500)
+        .send({ error: "Failed to delete user from Prisma database" });
     }
 
     res.status(200).send({ message: "User deleted successfully" });

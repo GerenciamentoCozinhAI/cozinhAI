@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext"; // Importando o contexto de autenticação
 import { useEffect, useState } from "react";
 import Loading from "../loading/loading"; // Importando o componente de loading
-import { supabase } from "../../services/supabase"; // Importando o cliente do Supabase
+import { supabase } from "../../lib/supabase"; // Importando o cliente do Supabase
 
 export default function PrivateRoute({
   children,
@@ -29,7 +29,7 @@ export default function PrivateRoute({
     checkAuth();
   }, []);
 
-  if (loading) return  <Loading/> ;
+  if (loading) return <Loading />;
 
   return isAuthenticated ? <>{children}</> : <Navigate to="/auth-error" />;
 }
