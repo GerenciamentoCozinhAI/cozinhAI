@@ -6,8 +6,8 @@ import { deleteMyUser, getMyUser, replaceMyUser ,updateMyUser } from '../control
 const router = Router();
 
 router.get('/me', authMiddleware, getMyUser);
-router.put('/user', authMiddleware, replaceMyUser);
-router.patch('/user', authMiddleware, updateMyUser);
-router.delete('/user', authMiddleware, deleteMyUser);
+router.put('/me', authMiddleware, replaceMyUser);
+router.patch('/me', authMiddleware, updateMyUser);
+router.delete('/me', authMiddleware, deleteMyUser);
 
 export default router;
