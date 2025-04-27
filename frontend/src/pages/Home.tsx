@@ -1,22 +1,21 @@
-import { useAuth } from '../contexts/AuthContext';
+import Navbar from "../components/home/NavBar"
 
 export default function Home() {
-  const { logout } = useAuth();
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-4xl font-extrabold text-blue-600 mb-4">
-        Bem-vindo ao CozinhAI! 👨‍🍳
-      </h1>
-      <p className="text-lg text-gray-700 text-center max-w-md">
-        Aqui você pode compartilhar e descobrir receitas incríveis! Explore, crie e inspire-se na cozinha.
-      </p>
-      <button
-        className="mt-6 px-6 py-3 bg-red-500 text-white font-semibold rounded shadow hover:bg-red-600 transition duration-200"
-        onClick={logout}
-      >
-        Sair
-      </button>
+    <div className="flex min-h-screen bg-[#d8f3dc] items-center justify-center">
+      {/* Navbar lateral */}
+      <Navbar />
+
+      {/* Conteúdo principal */}
+      <main className="flex-1 p-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl font-extrabold text-[#1e5128] mb-4">Bem-vindo ao CozinhAI! 👨‍🍳</h1>
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+            Aqui você pode compartilhar e descobrir receitas incríveis! Explore, crie e inspire-se na cozinha.
+          </p>
+        </div>
+      </main>
     </div>
-  );
+  )
 }

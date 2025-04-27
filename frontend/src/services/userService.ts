@@ -1,4 +1,5 @@
 const apiURL = import.meta.env.VITE_API_URL;
+import { supabase } from "../lib/supabase"; // Importando o cliente do Supabase
 
 // Obter informações do usuário
 export const getMyUser = async (): Promise<any> => {
