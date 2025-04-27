@@ -3,7 +3,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 // Obter informações do usuário
 export const getMyUser = async (): Promise<any> => {
     try {
-      const response = await fetch(`${apiURL}/me`, {
+      const response = await fetch(`${apiURL}/users/me`, {
         method: "GET",
         credentials: "include", // Inclui cookies na requisição
       });
@@ -28,7 +28,7 @@ export const getMyUser = async (): Promise<any> => {
     avatar?: string;
   }): Promise<any> => {
     try {
-      const response = await fetch(`${apiURL}/me`, {
+      const response = await fetch(`${apiURL}/users/me`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export const getMyUser = async (): Promise<any> => {
     avatar?: string;
   }): Promise<any> => {
     try {
-      const response = await fetch(`${apiURL}/me`, {
+      const response = await fetch(`${apiURL}/users/me`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ export const getMyUser = async (): Promise<any> => {
   // Remover usuário
   export const deleteMyUser = async (): Promise<any> => {
     try {
-      const response = await fetch(`${apiURL}/me`, {
+      const response = await fetch(`${apiURL}/users/me`, {
         method: "DELETE",
         credentials: "include",
       });
