@@ -45,6 +45,15 @@ export default function LoginForm({ onSubmit, error }: Props) {
             <p className="text-red-700 text-sm">{error}</p>
           </div>
         )}
+        
+        <div className="flex justify-center">
+          <GoogleButton />
+        </div>
+
+        <div className="relative flex items-center justify-center mt-6">
+          <div className="border-t border-green-200 absolute w-full"></div>
+          <div className="bg-white px-4 relative text-green-500 text-sm">ou</div>
+        </div>
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-green-700">Email</label>
@@ -92,15 +101,6 @@ export default function LoginForm({ onSubmit, error }: Props) {
           Entrar
         </button>
 
-        <div className="relative flex items-center justify-center mt-6">
-          <div className="border-t border-green-200 absolute w-full"></div>
-          <div className="bg-white px-4 relative text-green-500 text-sm">ou</div>
-        </div>
-
-        <div className="flex justify-center">
-          <GoogleButton />
-        </div>
-
         <p className="text-sm text-center text-gray-600">
           Ainda não tem conta?{" "}
           <a
@@ -110,6 +110,20 @@ export default function LoginForm({ onSubmit, error }: Props) {
             Criar conta
           </a>
         </p>
+
+        <div className="relative flex items-center justify-center mt-6">
+          <div className="border-t border-green-200 absolute w-full"></div>
+          <div className="bg-white px-4 relative text-green-500 text-sm">Não quero entrar em uma conta</div>
+        </div>
+
+        <div className="text-center mt-4">
+          <a
+            href="/home"
+            className="text-green-600 font-medium hover:text-green-800 hover:underline transition-colors"
+          >
+            Voltar para o CozinhAI
+          </a>
+        </div>
       </form>
     </div>
   )

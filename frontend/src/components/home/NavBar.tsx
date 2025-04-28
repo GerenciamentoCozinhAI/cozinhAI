@@ -8,6 +8,7 @@ interface NavbarProps {
 
 export default function Navbar({ setShowNavbar }: NavbarProps) {
   const { logout } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="h-screen w-64 bg-[#1e5128] text-white flex flex-col overflow-y-auto">
@@ -40,27 +41,42 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
       {/* Links de navegação */}
       <nav className="flex-1 p-4">
         <div className="space-y-3">
-          <Link to="/home" className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors">
+          <Link
+            to="/home"
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
             <Home size={20} />
             <span>Início</span>
           </Link>
 
-          <Link to="/home/recipes" className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors">
+          <Link
+            to="/home/recipes"
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
             <Book size={20} />
             <span>Receitas</span>
           </Link>
 
-          <Link to="/home/my-recipes" className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors">
+          <Link
+            to="/home/my-recipes"
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
             <User size={20} />
             <span>Minhas Receitas</span>
           </Link>
 
-          <Link to="/home/favorites" className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors">
+          <Link
+            to="/home/favorites"
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
             <Heart size={20} />
             <span>Favoritas</span>
           </Link>
 
-          <Link to="/home/chefIA" className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors">
+          <Link
+            to="/home/chefIA"
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
             <Bot size={20} />
             <span>ChefIA</span>
           </Link>
@@ -69,13 +85,23 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
 
       {/* Botão de logout */}
       <div className="p-4 border-t border-[#4e9f3d]/30">
-        <button
-          onClick={logout}
-          className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
-        >
-          <LogOut size={20} />
-          <span>Sair</span>
-        </button>
+        {isAuthenticated ? (
+          <button
+            onClick={logout}
+            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
+            <LogOut size={20} />
+            <span>Sair</span>
+          </button>
+        ) : (
+          <Link
+            to="/login"
+            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
+            <LogOut size={20} />
+            <span>Entrar</span>
+          </Link>
+        )}
       </div>
     </div>
   );
