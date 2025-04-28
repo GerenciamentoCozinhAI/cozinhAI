@@ -15,7 +15,7 @@ const GoogleButton: React.FC = () => {
     };
 
     return (
-        <button
+        <button type ="button"
             onClick={handleLogin}
             className="flex items-center justify-center px-4 py-2 rounded bg-gray-100 text-gray-700 text-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
         >
