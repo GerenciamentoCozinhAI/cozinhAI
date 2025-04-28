@@ -4,7 +4,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import AuthCallback from "./pages/auth/AuthCallback";
 import AuthError from "./pages/errors/AuthError";
-import Home from "./pages/Home";
+import Home from "./pages/home/Home";
 import LandingPage from "./pages/LandingPage";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
