@@ -11,7 +11,7 @@ export default function Loading({
   message = "Carregando, por favor aguarde...",
   showTips = true,
 }: LoadingProps) {
-  const [tipIndex, setTipIndex] = useState(0)
+  const [tipIndex, setTipIndex] = useState(Math.floor(Math.random() * 7))
 
   const tips = [
     "Sabia que você pode salvar suas receitas favoritas?",
@@ -21,16 +21,16 @@ export default function Loading({
     "Use ingredientes da estação para receitas mais saborosas e econômicas.",
     "Use ingredientes que estão para se vencer, assim você evita desperdício.",
     "Quer fazer uma receita bem ruim? Filtre por deslikes.",
-    "Você sabia que pode adicionar suas próprias receitas à comunidade?"
+    "Você sabia que pode adicionar suas próprias receitas à comunidade?",
   ]
 
   useEffect(() => {
     if (!showTips) return
-
+  
     const interval = setInterval(() => {
-      setTipIndex((prevIndex) => (prevIndex + 1) % tips.length)
+      setTipIndex(() => Math.floor(Math.random() * tips.length))
     }, 5000)
-
+  
     return () => clearInterval(interval)
   }, [showTips, tips.length])
 

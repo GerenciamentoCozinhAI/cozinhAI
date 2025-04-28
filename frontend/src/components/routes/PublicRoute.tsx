@@ -30,5 +30,5 @@ export default function PublicRoute({
 
   if (loading) return <Loading />;
 
-  return !isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+  return !isAuthenticated ? <>{children}</> : <Navigate to="/home" />;
 }

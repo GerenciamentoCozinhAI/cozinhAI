@@ -60,7 +60,7 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
             <span>Favoritas</span>
           </Link>
 
-          <Link to="home/chef-ia" className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors">
+          <Link to="/home/chefIA" className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors">
             <Bot size={20} />
             <span>ChefIA</span>
           </Link>

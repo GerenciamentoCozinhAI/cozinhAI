@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../../components/home/NavBar";
 import { Menu } from "lucide-react";
+import { Outlet } from "react-router-dom";
 
 export default function Home() {
   const [showNavbar, setShowNavbar] = useState(false); // começa escondida!
@@ -40,16 +41,8 @@ export default function Home() {
       </div>
 
       {/* Conteúdo principal */}
-      <main className="flex-1 p-8 flex items-center justify-center">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl font-extrabold text-[#1e5128] mb-4">
-            Bem-vindo ao CozinhAI! 👨‍🍳
-          </h1>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            Aqui você pode compartilhar e descobrir receitas incríveis! Explore,
-            crie e inspire-se na cozinha.
-          </p>
-        </div>
+      <main className="flex-1 p-8 flex items-center justify-center overflow-y-auto h-screen">
+        <Outlet />
       </main>
     </div>
   );

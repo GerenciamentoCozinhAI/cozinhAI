@@ -31,5 +31,5 @@ export default function PrivateRoute({
 
   if (loading) return <Loading />;
 
-  return isAuthenticated ? <>{children}</> : <Navigate to="/auth-error" />;
+  return isAuthenticated ? <>{children}</> : <Navigate to="/home/auth-error" />;
 }

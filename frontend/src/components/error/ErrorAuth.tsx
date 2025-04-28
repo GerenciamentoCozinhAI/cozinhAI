@@ -9,7 +9,7 @@ const ErrorAuth: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen text-center bg-gray-100 text-gray-800">
+        <div className="flex flex-col items-center justify-center text-center text-gray-800">
             <h1 className="text-2xl font-bold mb-4">Acesso Negado</h1>
             <p className="text-lg mb-6">Você deveria estar logado para acessar essa funcionalidade.</p>
             <button
