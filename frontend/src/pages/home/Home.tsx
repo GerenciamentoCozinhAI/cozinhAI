@@ -31,17 +31,17 @@ export default function Home() {
       {/* Navbar lateral */}
       <div
         className={`
-          fixed top-0 left-0 h-full bg-[#1e5128] text-white overflow-x-hidden transition-transform duration-300
+          fixed top-0 left-0 h-screen bg-[#1e5128] text-white overflow-x-hidden transition-transform duration-300
           ${showNavbar ? "translate-x-0" : "-translate-x-full"}
           w-64 z-40
-          md:relative md:translate-x-0 md:block
+          md:fixed md:translate-x-0 md:block
         `}
       >
         <Navbar setShowNavbar={setShowNavbar} />
       </div>
 
       {/* Conteúdo principal */}
-      <main className="flex-1 p-8 flex items-center justify-center overflow-y-auto h-screen">
+      <main className="flex-1 p-8 flex items-center justify-center overflow-y-auto md:ml-64">
         <Outlet />
       </main>
     </div>

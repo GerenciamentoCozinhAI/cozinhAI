@@ -36,11 +36,17 @@ export const replaceMyUser = async (userData: {
   name?: string;
   avatar?: string;
 }): Promise<any> => {
+  const token = localStorage.getItem("token"); // Recuperar o token do localStorage
+
+  if (!token) {
+    throw new Error("Token não encontrado");
+  }
   try {
     const response = await fetch(`${apiURL}/users/me`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Passar o token no cabeçalho
       },
       credentials: "include",
       body: JSON.stringify(userData),

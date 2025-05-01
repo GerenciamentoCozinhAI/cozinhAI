@@ -4,7 +4,6 @@ import {
   useContext,
   useState,
   ReactNode,
-  useEffect,
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser, loginUser, logoutUser } from "../services/authService";
@@ -21,10 +20,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    syncAuthState();
-  }, []);
 
   const register = async (data: RegisterData) => {
     try {

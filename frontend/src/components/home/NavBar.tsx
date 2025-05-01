@@ -45,12 +45,12 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
 
       {/* Perfil do usuário */}
       <div className="p-4 flex flex-col items-center border-b border-[#4e9f3d]/30">
-        <Link to="/home/profile" className="group">
+        <Link to="/home/profile" className="group flex flex-col items-center">
           <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#8fd14f] group-hover:border-white transition-all duration-200">
         <img
           src={user?.avatar! || "https://sistemas.ft.unicamp.br/agenda/imagens/sem_foto.png"}
           alt="Foto de perfil"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-200"
         />
           </div>
           <p className="mt-2 text-center font-medium group-hover:text-[#8fd14f] transition-colors">

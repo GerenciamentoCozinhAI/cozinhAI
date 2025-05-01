@@ -1,8 +1,10 @@
+// src/components/home/userProfile/UserProfile.tsx
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { getMyUser, deleteMyUser } from "../../../services/userService";
 import { Edit, Mail, User } from "lucide-react";
+import UserForm from "./UserForm";
 
 const UserProfile: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -51,6 +53,7 @@ const UserProfile: React.FC = () => {
         setLoading(false);
         }
     };
+  
 
   if (loading) {
     return (
@@ -78,7 +81,7 @@ const UserProfile: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6 mt-8 flex flex-col items-center w-full">
+    <div className="max-w-4xl mx-auto p-4 md:p-6 flex flex-col items-center w-full">
       {user && (
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Banner e foto de perfil */}
@@ -207,55 +210,8 @@ const UserProfile: React.FC = () => {
                   Configurações da Conta
                 </h3>
                 <div className="space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-medium mb-3">Informações Pessoais</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          Nome Completo
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4e9f3d] focus:border-transparent"
-                          defaultValue={user.name || ""}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4e9f3d] focus:border-transparent"
-                          defaultValue={user.email || ""}
-                          disabled
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          Telefone
-                        </label>
-                        <input
-                          type="tel"
-                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4e9f3d] focus:border-transparent"
-                          defaultValue={user.phone || ""}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          avatar URL
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4e9f3d] focus:border-transparent"
-                          defaultValue={user.avatar || ""}
-                        />
-                    </div>
-                    </div>
-                    <button className="mt-4 bg-[#4e9f3d] text-white px-4 py-2 rounded-md hover:bg-[#1e5128] transition-colors">
-                      Salvar Alterações
-                    </button>
-                  </div>
+    
+                  <UserForm/>
 
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium mb-3 text-red-600">
