@@ -1,6 +1,6 @@
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
-import { Book, LogOut, User, Heart, Home, Bot, Menu } from "lucide-react";
+import { Book, LogOut, User, Heart, Home, Bot, Menu, Plus } from "lucide-react";
 import { getMyUser } from "../../services/userService";
 import { useEffect, useState } from "react";
 
@@ -92,6 +92,14 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
           >
             <Heart size={20} />
             <span>Favoritas</span>
+          </Link>
+
+          <Link
+            to="/home/create-recipe"
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+          >
+            <Plus size={20} />
+            <span>Criar Nova Receita</span>
           </Link>
 
           <Link

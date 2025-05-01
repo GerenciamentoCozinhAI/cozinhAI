@@ -93,6 +93,15 @@ export default function App() {
         />
 
         <Route
+          path="create-recipe"
+          element={
+            <PrivateRoute>
+              <div>Conteúdo Protegido</div>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
           path="ChefIA"
           element={
             <PrivateRoute>
