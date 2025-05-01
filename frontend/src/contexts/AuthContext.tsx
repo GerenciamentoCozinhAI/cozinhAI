@@ -54,13 +54,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
+      //await supabase.auth.signOut(); // Logout do Supabase
       await logoutUser(); // Chamar o serviço de logout
+      localStorage.removeItem("sb-uzccrklxjfbwnntnqapo-auth-token")
       localStorage.removeItem("token");
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
       sessionStorage.removeItem("access_token");
       sessionStorage.removeItem("refresh_token");
-      supabase.auth.signOut(); // Logout do Supabase
       setIsAuthenticated(false);
       setError("");
       setSuccess("Logout realizado com sucesso!");

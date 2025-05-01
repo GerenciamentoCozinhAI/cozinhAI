@@ -9,6 +9,7 @@ import HomeMain from "./pages/home/HomeMain";
 import LandingPage from "./pages/LandingPage";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
+import UserProfile from "./components/home/userProfile/UserProfile";
 
 export default function App() {
   return (
@@ -67,7 +68,7 @@ export default function App() {
           path="profile"
           element={
             <PrivateRoute>
-              <div>meu perfil</div>
+              <UserProfile/>
             </PrivateRoute>
           }
         />
