@@ -18,6 +18,7 @@ model User {
   name      String   @db.VarChar(255)
   email     String   @unique @db.VarChar(255)
   avatar    String?
+  phone     String? @db.VarChar(20)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   recipes   Recipe[] @relation("UserRecipes")
@@ -29,12 +30,13 @@ model Recipe {
   id          String   @id @default(cuid())
   title       String   @db.VarChar(255)
   description String?  @db.Text
-  difficulty  Difficulty
+  difficulty  Int @default(5)
   instructions String? @db.Text
   ingredients  Recipe_Ingredients[]
   prepTime    Int?
   servings    Int?
   image       String?
+  isGeneratedByAI Boolean? @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -42,12 +44,6 @@ model Recipe {
   user        User     @relation(fields: [userId], references: [id], name: "UserRecipes")
   likes       Like[]   @relation("RecipeLikes") // Relacionamento com likes
   deslikes    Deslike[]   @relation("RecipeDeslikes") // Relacionamento com deslikes
-}
-
-enum Difficulty {
-  Fácil
-  Médio
-  Difícil
 }
 
 model Like {
@@ -73,6 +69,7 @@ model Deslike {
 
   @@unique([userId, recipeId]) // Garante que um usuário só pode dar um like por receita
 }
+
 
 model Recipe_Ingredients {
   id        String   @id @default(cuid())
