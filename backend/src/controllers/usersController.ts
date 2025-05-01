@@ -62,6 +62,7 @@ export const replaceMyUser = async (
       if (email) prismaUpdateData.email = email;
       if (name) prismaUpdateData.name = name;
       if (avatar) prismaUpdateData.avatar = avatar;
+      if (phone) prismaUpdateData.phone = phone;
 
       const replacedUser = await prisma.user.update({
         where: { id: user.id },
@@ -121,6 +122,7 @@ export const updateMyUser = async (
       if (email) prismaUpdateData.email = email;
       if (name) prismaUpdateData.name = name;
       if (avatar) prismaUpdateData.avatar = avatar;
+      if (phone) prismaUpdateData.phone = phone;
 
       const updatedUser = await prisma.user.update({
         where: { id: user.id },

@@ -31,10 +31,11 @@ model Recipe {
   description String?  @db.Text
   difficulty  Int @default(5)
   instructions String? @db.Text
-  ingredients  Json
+  ingredients  Recipe_Ingredients[]
   prepTime    Int?
   servings    Int?
   image       String?
+  isGeneratedByAI Boolean? @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -66,4 +67,27 @@ model Deslike {
   recipe    Recipe   @relation(fields: [recipeId], references: [id], name: "RecipeDeslikes")
 
   @@unique([userId, recipeId]) // Garante que um usuário só pode dar um like por receita
+}
+
+
+model Recipe_Ingredients {
+  id        String   @id @default(cuid())
+  recipeId  String
+  ingredientId String
+  quantity  Float?
+  unit      String? @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model Ingredient{
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipes   Recipe_Ingredients[]
 }
