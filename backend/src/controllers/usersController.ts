@@ -6,34 +6,15 @@ import { prisma } from "../services/prisma";
 export const getMyUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = (req as any).user;
-    const supabase = (req as any).supabase;
 
-    // Buscar informações do auth.users
-    const { data: supabaseUser, error } = await supabase.auth.admin.getUserById(
-      user.id
-    );
+    // Buscar informações do Prisma
+    const prismaUser = await prisma.user.findUnique({
+      where: { id: user.id },
+    });
 
-    if (supabaseUser) {
-      res.send(supabaseUser);
+    if (prismaUser) {
+      res.send(prismaUser);
       return;
-    }
-
-    if (error) {
-      console.error("Error fetching user from auth.users:", error.message);
-    }
-
-    // Caso não consiga pegar do auth.users, buscar informações do Prisma
-    try {
-      const prismaUser = await prisma.user.findUnique({
-        where: { id: user.id },
-      });
-
-      if (prismaUser) {
-        res.send(prismaUser);
-        return;
-      }
-    } catch (prismaError) {
-      console.error("Error fetching user from Prisma:", prismaError);
     }
 
     res.status(404).send({ error: "User not found" });

@@ -29,9 +29,9 @@ model Recipe {
   id          String   @id @default(cuid())
   title       String   @db.VarChar(255)
   description String?  @db.Text
-  difficulty  Difficulty
+  difficulty  Int @default(5)
   instructions String? @db.Text
-  ingredients  Recipe_Ingredients[]
+  ingredients  Json
   prepTime    Int?
   servings    Int?
   image       String?
@@ -42,12 +42,6 @@ model Recipe {
   user        User     @relation(fields: [userId], references: [id], name: "UserRecipes")
   likes       Like[]   @relation("RecipeLikes") // Relacionamento com likes
   deslikes    Deslike[]   @relation("RecipeDeslikes") // Relacionamento com deslikes
-}
-
-enum Difficulty {
-  Fácil
-  Médio
-  Difícil
 }
 
 model Like {
@@ -72,26 +66,4 @@ model Deslike {
   recipe    Recipe   @relation(fields: [recipeId], references: [id], name: "RecipeDeslikes")
 
   @@unique([userId, recipeId]) // Garante que um usuário só pode dar um like por receita
-}
-
-model Recipe_Ingredients {
-  id        String   @id @default(cuid())
-  recipeId  String
-  ingredientId String
-  quantity  Float?
-  unit      String? @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  recipe    Recipe   @relation(fields: [recipeId], references: [id])
-  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
-}
-
-model Ingredient{
-  id        String   @id @default(cuid())
-  name      String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  recipes   Recipe_Ingredients[]
 }
