@@ -5,9 +5,10 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { getMyUser, deleteMyUser } from "../../../services/userService";
 import { Edit, Mail, User } from "lucide-react";
 import UserForm from "./UserForm";
+import { User as UserType } from "./UserForm";
 
 const UserProfile: React.FC = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const { logout } = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -174,7 +175,7 @@ const UserProfile: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Receitas Criadas</span>
                         <span className="font-medium">
-                          {user.recipes_count || 0}
+                          {0}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -189,7 +190,7 @@ const UserProfile: React.FC = () => {
                           Receitas Favoritas
                         </span>
                         <span className="font-medium">
-                          {user.favorites_count || 0}
+                          {0}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -211,7 +212,7 @@ const UserProfile: React.FC = () => {
                 </h3>
                 <div className="space-y-4">
     
-                  <UserForm/>
+                  <UserForm user={user} setUser={setUser}/>
 
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium mb-3 text-red-600">

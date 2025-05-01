@@ -1,44 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { replaceMyUser, getMyUser } from "../../../services/userService"; // Importando o serviço de atualização de usuário
+import { useState, Dispatch, SetStateAction } from "react";
+import { replaceMyUser } from "../../../services/userService"; // Importando o serviço de atualização de usuário
 
-interface User {
+export interface User {
     name: string;
     email: string;
     phone: string;
     avatar: string;
+    createdAt: string;
 }
 
-const UserForm: React.FC = () => {
-    const [user, setUser] = useState<User>({
-        name: "",
-        email: "",
-        phone: "",
-        avatar: "",
-    });
+interface UserFormProps {
+    user: User;
+    setUser: Dispatch<SetStateAction<User | null>>; // Função para atualizar o estado do usuário
+}
+
+const UserForm = (userProps: UserFormProps) => {
+    const { user, setUser } = userProps; // Desestruturando as props para obter o usuário e a função de atualização
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                setLoading(true);
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    setError("Token não encontrado");
-                    return;
-                }
-                const userData = await getMyUser();
-                setUser(userData);
-            } catch (error) {
-                setError("Erro ao buscar usuário");
-                console.error("Erro ao buscar usuário:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUser();
-    }, []);
 
     const handleReplaceMyUser = async () => {
         try {
