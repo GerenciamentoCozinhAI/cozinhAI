@@ -147,6 +147,9 @@ export const getRecipeById = async (
   }
 };
 
+// GET: Listar receitas favoritas do usuário autenticado
+
+
 // PUT: Atualizar uma receita
 export const updateRecipe = async (req: Request, res: Response): Promise<void> => {
   try {
