@@ -80,13 +80,13 @@ model Recipe_Ingredients {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   ingredient Ingredient @relation(fields: [ingredientId], references: [id])
 }
 
 model Ingredient{
   id        String   @id @default(cuid())
-  name      String   @db.VarChar(255)
+  name      String   @unique @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
