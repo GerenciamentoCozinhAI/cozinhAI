@@ -1,26 +1,36 @@
+//src/controllers/favoritesController.ts
+
 import { Request, Response } from "express";
 import { prisma } from "../services/prisma";
 
 
+
 // GET: Obter todas as receitas favoritas do usuário
 export const getAllFavorites = async (req: Request, res: Response): Promise<void> => {
-    try {
+  try {
       const userId = (req as any).user.id; // ID do usuário autenticado
-  
+
       // Obter todas as receitas favoritas do usuário
       const favorites = await prisma.favorite.findMany({
-        where: { userId },
-        include: {
-          recipe: true, // Inclui os detalhes da receita
-        },
+          where: { userId },
+          include: {
+              recipe: true, // Inclui os detalhes da receita
+          },
       });
-  
+
+      console.log("Favorites fetched:", favorites); // Log para depuração
+
+      if (favorites.length === 0) {
+          res.status(404).send({ error: "No favorite recipes found" });
+          return;
+      }
+
       res.status(200).send(favorites);
-    } catch (err) {
+  } catch (err) {
       console.error("Error fetching favorite recipes:", err);
       res.status(500).send({ error: "Internal server error" });
-    }
-  };
+  }
+};
 
 // POST: Adicionar uma receita aos favoritos
 export const addFavorite = async (req: Request, res: Response): Promise<void> => {
