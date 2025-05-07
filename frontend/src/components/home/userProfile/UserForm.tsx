@@ -20,6 +20,7 @@ const UserForm = (userProps: UserFormProps) => {
     const [error, setError] = useState<string | null>(null);
 
     const handleReplaceMyUser = async () => {
+        if (window.confirm("Tem certeza que deseja alterar seus dados?")) {
         try {
             setLoading(true);
             const token = localStorage.getItem("token");
@@ -34,6 +35,7 @@ const UserForm = (userProps: UserFormProps) => {
             console.error("Erro ao atualizar conta:", error);
         } finally {
             setLoading(false);
+        }
         }
     };
 

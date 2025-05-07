@@ -70,6 +70,34 @@ export const getIngredientByName = async (req: Request, res: Response): Promise<
   }
 };
 
+// GET: Search ingredients by name (for autocomplete)
+export const searchIngredients = async (req: Request, res: Response): Promise<void> => {
+  try {
+    console.log("Query recebida:", req.query);
+    const { name } = req.query;
+
+    if (!name) {
+      res.status(400).send({ error: "Ingredient name is required" });
+      return;
+    }
+
+    const ingredients = await prisma.ingredient.findMany({
+      where: {
+        name: {
+          contains: String(name),
+          mode: "insensitive",
+        },
+      },
+    });
+
+    console.log("Ingredientes encontrados:", ingredients);
+    res.status(200).send(ingredients);
+  } catch (err) {
+    console.error("Erro ao buscar ingredientes:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+};
+
 // PUT: Atualizar um ingrediente (somente para usuários autenticados)
 export const updateIngredient = async (req: Request, res: Response): Promise<void> => {
   try {

@@ -42,11 +42,40 @@ export const getRecipeById = async (id: string): Promise<any> => {
   }
 };
 
+// Obter receitas do usuário autenticado
+export const getMyRecipes = async (): Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token não encontrado");
+  }
+
+  try {
+    const response = await fetch(`${apiURL}/recipes/my-recipes`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar receitas do usuário: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro em getMyRecipes:", error);
+    throw error;
+  }
+};
+
+
 // Criar uma nova receita
 export const createRecipe = async (recipeData: {
   title: string;
   description?: string;
-  difficulty?: string;
+  difficulty?: number;
   instructions?: string;
   prepTime?: number;
   servings?: number;

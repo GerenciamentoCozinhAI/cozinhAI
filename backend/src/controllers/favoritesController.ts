@@ -18,7 +18,6 @@ export const getAllFavorites = async (req: Request, res: Response): Promise<void
           },
       });
 
-      console.log("Favorites fetched:", favorites); // Log para depuração
 
       if (favorites.length === 0) {
           res.status(404).send({ error: "No favorite recipes found" });

@@ -71,6 +71,27 @@ export const createIngredient = async (ingredientData: { name: string }): Promis
   }
 };
 
+// Buscar ingredientes por nome (autocomplete)
+export const searchIngredients = async (query: string): Promise<any[]> => {
+  try {
+    const response = await fetch(`${apiURL}/ingredients/search?name=${query}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar ingredientes: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro em searchIngredients:", error);
+    throw error;
+  }
+};
+
 // Atualizar um ingrediente
 export const updateIngredient = async (
   id: string,

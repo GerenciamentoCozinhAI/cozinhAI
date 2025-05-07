@@ -37,6 +37,7 @@ const UserProfile: React.FC = () => {
   }, []);
 
     const handleDeleteAccount = async () => {
+      if (window.confirm("Tem certeza que deseja excluir sua conta?")){
         try {
         setLoading(true);
         const token = localStorage.getItem("token");
@@ -53,6 +54,7 @@ const UserProfile: React.FC = () => {
         } finally {
         setLoading(false);
         }
+      }
     };
   
 
