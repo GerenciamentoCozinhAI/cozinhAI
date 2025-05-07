@@ -116,7 +116,7 @@ export const updateRecipe = async (
   recipeData: {
     title: string;
     description?: string;
-    difficulty?: string;
+    difficulty?: number;
     instructions?: string;
     prepTime?: number;
     servings?: number;

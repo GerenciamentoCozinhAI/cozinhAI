@@ -1,23 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createRecipe } from "../../../services/recipeService";
 import { searchIngredients } from "../../../services/ingredientService";
 
-interface RecipeFormProps {
-  onSuccess: () => void;
-  initialData?: any;
-  onSubmit?: (data: any) => Promise<void>;
+interface Ingredient {
+  name: string;
+  quantity: number;
+  unit: string;
+  ingredientName?: string; // Adicionando o campo ingredientName para sugestões
 }
 
-const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
+interface RecipeData {
+  title: string;
+  description: string;
+  prepTime?: number;
+  servings?: number;
+  difficulty?: number;
+  image: string;
+  ingredients: Ingredient[];
+  instructions: string;
+}
+
+interface RecipeFormProps {
+  onSuccess: () => void;
+  initialData?: RecipeData;
+  onSubmit?: (data: RecipeData) => Promise<void>;
+}
+
+const RecipeForm: React.FC<RecipeFormProps> = ({
+  onSuccess,
+  initialData,
+  onSubmit,
+}) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [prepTime, setPrepTime] = useState<number | undefined>();
   const [servings, setServings] = useState<number | undefined>();
   const [difficulty, setDifficulty] = useState<number | undefined>();
   const [image, setImage] = useState("");
-  const [ingredients, setIngredients] = useState<
-    { name: string; quantity: number; unit: string }[]
-  >([{ name: "", quantity: 0, unit: "" }]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([
+    { name: "", quantity: 0, unit: "" },
+  ]);
   const [instructions, setInstructions] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [activeIngredientIndex, setActiveIngredientIndex] = useState<
@@ -25,9 +47,28 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
   >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Preencher dados ao editar
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title);
+      setDescription(initialData.description);
+      setPrepTime(initialData.prepTime);
+      setServings(initialData.servings);
+      setDifficulty(initialData.difficulty);
+      setImage(initialData.image);
+      const normalizedIngredients = initialData.ingredients.map((ing) => ({
+        name: ing.name || ing.ingredientName || "",
+        quantity: ing.quantity,
+        unit: ing.unit,
+      }));
+      setIngredients(normalizedIngredients);
+      setInstructions(initialData.instructions);
+    }
+  }, [initialData]);
+
   const handleIngredientChange = async (
     index: number,
-    field: string,
+    field: keyof Ingredient,
     value: string | number
   ) => {
     const updatedIngredients = [...ingredients];
@@ -37,21 +78,18 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
     };
     setIngredients(updatedIngredients);
 
-    // Definir o índice ativo
     if (field === "name") {
       setActiveIngredientIndex(index);
-    }
-
-    // Buscar sugestões de ingredientes
-    if (field === "name" && typeof value === "string" && value.length > 1) {
-      try {
-        const results = await searchIngredients(value);
-        setSuggestions(results.map((ingredient: any) => ingredient.name));
-      } catch (error) {
-        console.error("Erro ao buscar sugestões de ingredientes:", error);
+      if (typeof value === "string" && value.length > 1) {
+        try {
+          const results = await searchIngredients(value);
+          setSuggestions(results.map((ingredient: any) => ingredient.name));
+        } catch (error) {
+          console.error("Erro ao buscar sugestões de ingredientes:", error);
+        }
+      } else {
+        setSuggestions([]);
       }
-    } else {
-      setSuggestions([]);
     }
   };
 
@@ -60,7 +98,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
     updatedIngredients[index].name = suggestion;
     setIngredients(updatedIngredients);
     setSuggestions([]);
-    setActiveIngredientIndex(null); // Limpar o índice ativo
+    setActiveIngredientIndex(null);
   };
 
   const addIngredient = () => {
@@ -73,38 +111,48 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    if (isSubmitting) return; // Evita múltiplos cliques
-
-    setIsSubmitting(true); // Desabilita o botão
+    const formData: RecipeData = {
+      title,
+      description,
+      prepTime,
+      servings,
+      difficulty,
+      image,
+      ingredients,
+      instructions,
+    };
 
     try {
-      await createRecipe({
-        title,
-        description,
-        prepTime,
-        servings,
-        difficulty,
-        image,
-        ingredients,
-        instructions,
-      });
-      alert("Receita criada com sucesso!");
+      if (onSubmit) {
+        await onSubmit(formData);
+      } else {
+        await createRecipe(formData);
+        alert("Receita criada com sucesso!");
+      }
       onSuccess();
     } catch (error) {
-      console.error("Erro ao criar receita:", error);
-      alert("Erro ao criar receita.");
+      console.error("Erro ao salvar receita:", error);
+      alert("Erro ao salvar receita.");
     } finally {
-      setIsSubmitting(false); // Reabilita o botão após a conclusão
+      setIsSubmitting(false);
     }
   };
+
+  const isEditMode = !!initialData;
 
   return (
     <form
       onSubmit={handleSubmit}
       className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md"
     >
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Criar Receita</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">
+        {isEditMode ? "Editar Receita" : "Criar Receita"}
+      </h1>
+
+      {/* Título, descrição, tempo, porções, dificuldade, imagem */}
       <div className="mb-4">
         <label className="block text-gray-700 font-medium mb-2">Título</label>
         <input
@@ -173,6 +221,8 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
           className="w-full p-2 border border-gray-300 rounded"
         />
       </div>
+
+      {/* Ingredientes */}
       <div className="mb-4">
         <label className="block text-gray-700 font-medium mb-2">
           Ingredientes
@@ -195,11 +245,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
                 placeholder="Quantidade"
                 value={ingredient.quantity}
                 onChange={(e) =>
-                  handleIngredientChange(
-                    index,
-                    "quantity",
-                    Number(e.target.value)
-                  )
+                  handleIngredientChange(index, "quantity", Number(e.target.value))
                 }
                 className="w-1/3 p-2 border border-gray-300 rounded mr-2"
                 required
@@ -222,7 +268,6 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
                 Remover
               </button>
             </div>
-            {/* Exibir sugestões */}
             {activeIngredientIndex === index && suggestions.length > 0 && (
               <ul className="bg-white border border-gray-300 rounded shadow-md mt-2">
                 {suggestions.map((suggestion, i) => (
@@ -246,6 +291,8 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
           Adicionar Ingrediente
         </button>
       </div>
+
+      {/* Instruções */}
       <div className="mb-4">
         <label className="block text-gray-700 font-medium mb-2">
           Instruções
@@ -257,14 +304,18 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess }) => {
           required
         />
       </div>
+
+      {/* Botão */}
       <button
         type="submit"
-        className={`w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors ${
+        className={`w-full ${
+          isEditMode ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+        } text-white p-2 rounded transition-colors ${
           isSubmitting ? "opacity-50 cursor-not-allowed" : ""
         }`}
-        disabled={isSubmitting} // Desabilita o botão enquanto está enviando
+        disabled={isSubmitting}
       >
-        {isSubmitting ? "Enviando..." : "Criar Receita"}
+        {isSubmitting ? "Enviando..." : isEditMode ? "Salvar Alterações" : "Criar Receita"}
       </button>
     </form>
   );
