@@ -86,7 +86,7 @@ const UserProfile: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 flex flex-col items-center w-full">
       {user && (
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full ">
           {/* Banner e foto de perfil */}
           <div className="relative">
             <div className="h-40 bg-gradient-to-r from-[#1e5128] to-[#4e9f3d]"></div>
@@ -177,13 +177,13 @@ const UserProfile: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Receitas Criadas</span>
                         <span className="font-medium">
-                          {0}
+                          {user.recipeCount}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div
                           className="bg-[#8fd14f] h-2.5 rounded-full"
-                          style={{ width: "45%" }}
+                          style={{ width: `${(user.recipeCount / 100) * 100}%` }}
                         ></div>
                       </div>
 
@@ -192,13 +192,13 @@ const UserProfile: React.FC = () => {
                           Receitas Favoritas
                         </span>
                         <span className="font-medium">
-                          {0}
+                          {user.favoriteCount}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div
                           className="bg-[#8fd14f] h-2.5 rounded-full"
-                          style={{ width: "65%" }}
+                          style={{ width: `${(user.favoriteCount / 100) * 100}%` }}
                         ></div>
                       </div>
                     </div>

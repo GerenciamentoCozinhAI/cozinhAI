@@ -7,6 +7,8 @@ export interface User {
     phone: string;
     avatar: string;
     createdAt: string;
+    recipeCount: number;
+    favoriteCount: number;
 }
 
 interface UserFormProps {
