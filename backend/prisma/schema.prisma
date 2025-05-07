@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Atualize o modelo User para incluir o relacionamento com favoritos
 model User {
   id        String   @id
   name      String   @db.VarChar(255)
@@ -22,10 +23,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   recipes   Recipe[] @relation("UserRecipes")
-  likes     Like[]   @relation("UserLikes") // Relacionamento com likes
-  deslikes     Deslike[]   @relation("UserDeslikes") // Relacionamento com deslikes
+  likes     Like[]   @relation("UserLikes")
+  favorites Favorite[] @relation("UserFavorites") // Relacionamento com favoritos
 }
 
+// Atualize o modelo Recipe para incluir o relacionamento com favoritos
 model Recipe {
   id          String   @id @default(cuid())
   title       String   @db.VarChar(255)
@@ -42,8 +44,20 @@ model Recipe {
 
   userId      String
   user        User     @relation(fields: [userId], references: [id], name: "UserRecipes")
-  likes       Like[]   @relation("RecipeLikes") // Relacionamento com likes
-  deslikes    Deslike[]   @relation("RecipeDeslikes") // Relacionamento com deslikes
+  likes       Like[]   @relation("RecipeLikes")
+  favorites   Favorite[] @relation("RecipeFavorites") // Relacionamento com favoritos
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  recipeId  String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], name: "UserFavorites", onDelete: Cascade)
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], name: "RecipeFavorites", onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([userId, recipeId]) // Garante que um usuário só pode favoritar uma receita uma vez
 }
 
 model Like {
@@ -52,24 +66,11 @@ model Like {
   recipeId  String
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], name: "UserLikes")
-  recipe    Recipe   @relation(fields: [recipeId], references: [id], name: "RecipeLikes")
+  user      User     @relation(fields: [userId], references: [id], name: "UserLikes", onDelete: Cascade)
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], name: "RecipeLikes", onDelete: Cascade, onUpdate: Cascade)
 
   @@unique([userId, recipeId]) // Garante que um usuário só pode dar um like por receita
 }
-
-model Deslike {
-  id        String   @id @default(cuid())
-  userId    String
-  recipeId  String
-  createdAt DateTime @default(now())
-
-  user      User     @relation(fields: [userId], references: [id], name: "UserDeslikes")
-  recipe    Recipe   @relation(fields: [recipeId], references: [id], name: "RecipeDeslikes")
-
-  @@unique([userId, recipeId]) // Garante que um usuário só pode dar um like por receita
-}
-
 
 model Recipe_Ingredients {
   id        String   @id @default(cuid())
@@ -80,13 +81,13 @@ model Recipe_Ingredients {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  recipe    Recipe   @relation(fields: [recipeId], references: [id])
-  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
 }
 
 model Ingredient{
   id        String   @id @default(cuid())
-  name      String   @db.VarChar(255)
+  name      String   @unique @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
