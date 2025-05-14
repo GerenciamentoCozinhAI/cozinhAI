@@ -2,6 +2,8 @@
 
 import { Request, Response } from "express";
 import { prisma } from "../services/prisma";
+import { generateRecipe } from "../services/geminiAPI";
+import { getPexelsImage } from "../services/pexelsAPI";
 
 // POST: Criar uma nova receita
 export const createRecipe = async (
@@ -82,6 +84,131 @@ export const createRecipe = async (
   }
 };
 
+// POST: Gerar uma receita com base na IA
+export const generateRecipeWithAI = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user = (req as any).user; // Usuário autenticado
+    const { ingredients, observations } = req.body; // Lista de ingredientes como string
+
+    // Validação básica
+    if (!ingredients || ingredients.length === 0) {
+      res.status(400).send({ error: "Ingredients are required" });
+      return;
+    }
+
+    // Verificar e criar ingredientes no banco de dados, se necessário
+    const ingredientPromises = ingredients.map(async (ingredient: any) => {
+      let existingIngredient = await prisma.ingredient.findUnique({
+        where: { name: ingredient.name },
+      });
+
+      if (!existingIngredient) {
+        existingIngredient = await prisma.ingredient.create({
+          data: { name: ingredient.name },
+        });
+      }
+
+      return {
+        ingredientId: existingIngredient.id,
+        ingredientName: existingIngredient.name,
+        quantity: ingredient.quantity || null,
+        unit: ingredient.unit || null,
+      };
+    });
+
+    const processedIngredients = await Promise.all(ingredientPromises);
+
+    // Chamar a função da IA para gerar a receita
+    const aiGeneratedRecipe = await generateRecipe(
+      processedIngredients.map((i) => ({
+        name: i.ingredientName,
+        quantity: i.quantity,
+        unit: i.unit,
+      })),
+      observations
+    );
+
+    // Extrair nomes dos ingredientes enviados pelo usuário
+    const originalIngredientNames = ingredients.map((i: any) =>
+      i.name.toLowerCase()
+    );
+
+    // Verificar se a IA adicionou ingredientes extras
+    const allIngredientsFromAI = aiGeneratedRecipe.ingredients as {
+      name: string;
+      quantity: number;
+      unit: string;
+    }[];
+
+    const additionalIngredients = allIngredientsFromAI.filter(
+      (aiIng) => !originalIngredientNames.includes(aiIng.name.toLowerCase())
+    );
+
+    // Criar ingredientes extras no banco, se necessário
+    const additionalIngredientRecords = await Promise.all(
+      additionalIngredients.map(async (ingredient) => {
+        let existing = await prisma.ingredient.findUnique({
+          where: { name: ingredient.name },
+        });
+
+        if (!existing) {
+          existing = await prisma.ingredient.create({
+            data: { name: ingredient.name },
+          });
+        }
+
+        return {
+          ingredientId: existing.id,
+          ingredientName: existing.name,
+          quantity: ingredient.quantity || null,
+          unit: ingredient.unit || null,
+        };
+      })
+    );
+
+    // Juntar os ingredientes originais com os adicionais
+    const finalIngredients = [
+      ...processedIngredients,
+      ...additionalIngredientRecords,
+    ];
+
+    const recipeImage = await getPexelsImage(aiGeneratedRecipe.whatIs); // URL da imagem gerada pela IA
+
+    // Criar a receita no banco de dados
+    const recipe = await prisma.recipe.create({
+      data: {
+        title: aiGeneratedRecipe.title,
+        description: aiGeneratedRecipe.description,
+        difficulty: parseInt(aiGeneratedRecipe.difficulty, 10),
+        instructions: aiGeneratedRecipe.instructions,
+        prepTime: aiGeneratedRecipe.prepTime,
+        servings: aiGeneratedRecipe.servings,
+        image: recipeImage || null,
+        isGeneratedByAI: true,
+        userId: user.id, // Relaciona a receita ao usuário autenticado
+        ingredients: {
+          create: finalIngredients,
+        },
+      },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: true, // Inclui os detalhes dos ingredientes
+          },
+        },
+      },
+    });
+
+    res.status(201).send(recipe);
+  } catch (err) {
+    console.error("Error generating recipe with AI:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+};
+
 // GET: Listar todas as receitas
 export const getAllRecipes = async (
   req: Request,
@@ -124,7 +251,10 @@ export const getAllRecipes = async (
 };
 
 // GET: Buscar uma receita pelo ID
-export const getRecipeById = async (req: Request, res: Response): Promise<void> => {
+export const getRecipeById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const user = (req as any).user; // Usuário autenticado
@@ -178,7 +308,10 @@ export const getRecipeById = async (req: Request, res: Response): Promise<void> 
 };
 
 // GET: Listar receitas de um usuário específico
-export const getMyRecipes = async (req: Request, res: Response): Promise<void> => {
+export const getMyRecipes = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user; // Usuário autenticado
 
@@ -219,7 +352,10 @@ export const getMyRecipes = async (req: Request, res: Response): Promise<void> =
 };
 
 // GET: Obter quantiade de receitas criadas por um usuário
-export const getMyRecipeCount = async (req: Request, res: Response): Promise<void> => {
+export const getMyRecipeCount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user; // Usuário autenticado
 
@@ -242,7 +378,10 @@ export const getMyRecipeCount = async (req: Request, res: Response): Promise<voi
 };
 
 // PUT: Atualizar uma receita
-export const updateRecipe = async (req: Request, res: Response): Promise<void> => {
+export const updateRecipe = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params; // ID da receita a ser atualizada
     const user = (req as any).user; // Usuário autenticado
@@ -273,7 +412,9 @@ export const updateRecipe = async (req: Request, res: Response): Promise<void> =
 
     // Verificar se o usuário autenticado é o criador da receita
     if (existingRecipe.userId !== user.id) {
-      res.status(403).send({ error: "You are not authorized to update this recipe" });
+      res
+        .status(403)
+        .send({ error: "You are not authorized to update this recipe" });
       return;
     }
 
@@ -333,7 +474,10 @@ export const updateRecipe = async (req: Request, res: Response): Promise<void> =
 };
 
 // DELETE: Remover uma receita
-export const deleteRecipe = async (req: Request, res: Response): Promise<void> => {
+export const deleteRecipe = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const user = (req as any).user; // Usuário autenticado
@@ -347,7 +491,9 @@ export const deleteRecipe = async (req: Request, res: Response): Promise<void> =
 
     // Verificar se o usuário autenticado é o criador da receita
     if (existingRecipe.userId !== user.id) {
-      res.status(403).send({ error: "You are not authorized to delete this recipe" });
+      res
+        .status(403)
+        .send({ error: "You are not authorized to delete this recipe" });
       return;
     }
 
