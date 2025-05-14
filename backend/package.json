@@ -18,8 +18,7 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mime": "^4.0.7",
-    "unsplash-js": "^7.0.19"
+    "mime": "^4.0.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
