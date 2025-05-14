@@ -42,6 +42,7 @@ export const createRecipe = async (
 
       return {
         ingredientId: existingIngredient.id,
+        ingredientName: existingIngredient.name,
         quantity: ingredient.quantity,
         unit: ingredient.unit,
       };
@@ -101,10 +102,21 @@ export const getAllRecipes = async (
             email: true,
           }, // Inclui informações básicas do usuário
         },
+        _count: {
+          select: {
+            likes: true, // Conta o número de likes
+          },
+        },
       },
     });
 
-    res.status(200).send(recipes);
+    // Formata o retorno para incluir o número de likes
+    const formattedRecipes = recipes.map((recipe) => ({
+      ...recipe,
+      likes: recipe._count.likes, // Adiciona o número de likes ao objeto da receita
+    }));
+
+    res.status(200).send(formattedRecipes);
   } catch (err) {
     console.error("Error fetching recipes:", err);
     res.status(500).send({ error: "Internal server error" });
@@ -112,19 +124,17 @@ export const getAllRecipes = async (
 };
 
 // GET: Buscar uma receita pelo ID
-export const getRecipeById = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getRecipeById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
+    const user = (req as any).user; // Usuário autenticado
 
     const recipe = await prisma.recipe.findUnique({
       where: { id },
       include: {
         ingredients: {
           include: {
-            ingredient: true, // Inclui os detalhes dos ingredientes
+            ingredient: true,
           },
         },
         user: {
@@ -132,7 +142,12 @@ export const getRecipeById = async (
             id: true,
             name: true,
             email: true,
-          }, // Inclui informações básicas do usuário
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+          },
         },
       },
     });
@@ -142,15 +157,89 @@ export const getRecipeById = async (
       return;
     }
 
-    res.status(200).send(recipe);
+    // Verificar se o usuário já curtiu a receita
+    const userLiked = user
+      ? await prisma.like.findFirst({
+          where: {
+            recipeId: id,
+            userId: user.id,
+          },
+        })
+      : null;
+
+    res.status(200).send({
+      ...recipe,
+      isLiked: !!userLiked, // Retorna true se o usuário já curtiu
+    });
   } catch (err) {
     console.error("Error fetching recipe by ID:", err);
     res.status(500).send({ error: "Internal server error" });
   }
 };
 
-// GET: Listar receitas favoritas do usuário autenticado
+// GET: Listar receitas de um usuário específico
+export const getMyRecipes = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = (req as any).user; // Usuário autenticado
 
+    // Verificar se o usuário está autenticado
+    if (!user || !user.id) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
+    // Buscar receitas do usuário autenticado
+    const recipes = await prisma.recipe.findMany({
+      where: { userId: user.id },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: true, // Inclui os detalhes dos ingredientes
+          },
+        },
+        _count: {
+          select: {
+            likes: true, // Conta o número de likes
+          },
+        },
+      },
+    });
+
+    // Formatar o retorno para incluir o número de likes
+    const formattedRecipes = recipes.map((recipe) => ({
+      ...recipe,
+      likes: recipe._count.likes, // Adiciona o número de likes ao objeto da receita
+    }));
+
+    res.status(200).send(formattedRecipes);
+  } catch (err) {
+    console.error("Error fetching user's recipes:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+};
+
+// GET: Obter quantiade de receitas criadas por um usuário
+export const getMyRecipeCount = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = (req as any).user; // Usuário autenticado
+
+    // Verificar se o usuário está autenticado
+    if (!user || !user.id) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
+    // Contar o número de receitas do usuário autenticado
+    const count = await prisma.recipe.count({
+      where: { userId: user.id },
+    });
+
+    res.status(200).send({ count });
+  } catch (err) {
+    console.error("Error fetching user's recipe count:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+};
 
 // PUT: Atualizar uma receita
 export const updateRecipe = async (req: Request, res: Response): Promise<void> => {
@@ -202,6 +291,7 @@ export const updateRecipe = async (req: Request, res: Response): Promise<void> =
 
       return {
         ingredientId: existingIngredient.id,
+        ingredientName: existingIngredient.name,
         quantity: ingredient.quantity,
         unit: ingredient.unit,
       };

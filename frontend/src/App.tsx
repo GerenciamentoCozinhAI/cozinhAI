@@ -5,11 +5,16 @@ import Login from "./pages/auth/Login";
 import AuthCallback from "./pages/auth/AuthCallback";
 import AuthError from "./pages/errors/AuthError";
 import Home from "./pages/home/Home";
-import HomeMain from "./pages/home/HomeMain";
+import HomeMain from "./components/home/HomeMain";
 import LandingPage from "./pages/LandingPage";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
 import UserProfile from "./components/home/userProfile/UserProfile";
+import MyRecipeList from "./pages/home/recipes/MyRecipeList";
+import RecipeList from "./pages/home/recipes/RecipeList";
+import RecipePage from "./pages/home/recipes/RecipePage";
+import CreateRecipe from "./pages/home/recipes/CreateRecipe";
+import EditRecipe from "./pages/home/recipes/EditRecipe";
 
 export default function App() {
   return (
@@ -61,14 +66,18 @@ export default function App() {
           }
         />
 
-        <Route path="recipes" element={<div>Receitas</div>} />
+        <Route path="recipes" element={<RecipeList />} />
+
+
+        <Route path="recipe/:id" element={<RecipePage />} />
+
 
         {/* Exemplo de rota interna */}
         <Route
           path="profile"
           element={
             <PrivateRoute>
-              <UserProfile/>
+              <UserProfile />
             </PrivateRoute>
           }
         />
@@ -78,7 +87,7 @@ export default function App() {
           path="my-recipes"
           element={
             <PrivateRoute>
-              <div>Conteúdo Protegido</div>
+              <MyRecipeList />
             </PrivateRoute>
           }
         />
@@ -96,7 +105,16 @@ export default function App() {
           path="create-recipe"
           element={
             <PrivateRoute>
-              <div>Conteúdo Protegido</div>
+              <CreateRecipe />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="edit-recipe/:id"
+          element={
+            <PrivateRoute>
+              <EditRecipe />
             </PrivateRoute>
           }
         />

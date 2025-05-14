@@ -3,6 +3,8 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { getMyUser, deleteMyUser } from "../../../services/userService";
+import {getMyRecipeCount} from "../../../services/recipeService"
+import { getFavoriteCount } from "../../../services/favoriteService";
 import { Edit, Mail, User } from "lucide-react";
 import UserForm from "./UserForm";
 import { User as UserType } from "./UserForm";
@@ -23,8 +25,21 @@ const UserProfile: React.FC = () => {
           setError("Token não encontrado");
           return;
         }
-        const userData = await getMyUser();
-        setUser(userData);
+         // Buscar informações do usuário
+         const userData = await getMyUser();
+
+         // Buscar contagem de receitas criadas
+         const recipeCount = await getMyRecipeCount();
+ 
+         // Buscar contagem de receitas favoritas
+         const favoriteCount = await getFavoriteCount();
+ 
+         // Atualizar o estado do usuário com os novos dados
+         setUser({
+           ...userData,
+           recipeCount,
+           favoriteCount,
+         });
       } catch (error) {
         setError("Erro ao buscar usuário");
         console.error("Erro ao buscar usuário:", error);
@@ -37,6 +52,7 @@ const UserProfile: React.FC = () => {
   }, []);
 
     const handleDeleteAccount = async () => {
+      if (window.confirm("Tem certeza que deseja excluir sua conta?")){
         try {
         setLoading(true);
         const token = localStorage.getItem("token");
@@ -53,6 +69,7 @@ const UserProfile: React.FC = () => {
         } finally {
         setLoading(false);
         }
+      }
     };
   
 
@@ -84,7 +101,7 @@ const UserProfile: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 flex flex-col items-center w-full">
       {user && (
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full ">
           {/* Banner e foto de perfil */}
           <div className="relative">
             <div className="h-40 bg-gradient-to-r from-[#1e5128] to-[#4e9f3d]"></div>
@@ -181,7 +198,7 @@ const UserProfile: React.FC = () => {
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div
                           className="bg-[#8fd14f] h-2.5 rounded-full"
-                          style={{ width: "45%" }}
+                          style={{ width: `${(user.recipeCount / 100) * 100}%` }}
                         ></div>
                       </div>
 
@@ -196,7 +213,7 @@ const UserProfile: React.FC = () => {
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div
                           className="bg-[#8fd14f] h-2.5 rounded-full"
-                          style={{ width: "65%" }}
+                          style={{ width: `${(user.favoriteCount / 100) * 100}%` }}
                         ></div>
                       </div>
                     </div>

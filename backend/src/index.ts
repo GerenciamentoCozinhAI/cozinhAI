@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth";
 import recipesRoutes from "./routes/recipes";
 import favoritesRoutes from "./routes/favorites";
 import likesRoutes from "./routes/likes";
+import ingredientsRoutes from "./routes/ingredients";
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,8 @@ app.use("/recipes", recipesRoutes);
 app.use("/favorites", favoritesRoutes); // Adicionar rotas de favoritos
 
 app.use("/likes", likesRoutes); // Adicionar rotas de likes
+
+app.use("/ingredients", ingredientsRoutes); // Adicionar rotas de ingredientes
 
 const port = process.env.PORT || 3333;
 app.listen(port, () => {
