@@ -43,7 +43,7 @@ export async function generateRecipe(
       },
       systemInstruction: [
         {
-        text: `Você vai gerar uma receita com base nos ingredientes que eu passar. Cada ingrediente possui nome, quantidade e unidade. Você pode adicionar até no máximo 3 ingredientes extras **apenas se absolutamente necessário** para coerência da receita. Sempre respeite todas as observações do usuário (como restrições alimentares ou preferências).Seja detalhado nas instruções. A dificuldade vai de 1 (pipoca) a 10 (alta gastronomia), com exemplos intermediários como 4 (lasanha) e 8 (sushi). o whatIs é a definição da receita em ingles, como "pancake", "soup", "salad", "BBQ" etc.`,
+        text: `Você vai gerar uma receita com base nos ingredientes que eu passar. Cada ingrediente possui nome, quantidade e unidade. Você pode adicionar até no máximo 3 ingredientes extras **apenas se absolutamente necessário** para coerência da receita. Sempre respeite todas as observações do usuário (como restrições alimentares ou preferências).Seja detalhado nas instruções. A dificuldade vai de 1 (pipoca) a 10 (alta gastronomia), com exemplos intermediários como 4 (lasanha) e 8 (sushi). o whatIs é a definição da receita em ingles, como "chocolate pancake", "tomato soup", "salad", "BBQ" etc.`,
         },
       ],
     };
