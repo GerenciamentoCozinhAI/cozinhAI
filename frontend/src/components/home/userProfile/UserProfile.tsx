@@ -3,6 +3,8 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { getMyUser, deleteMyUser } from "../../../services/userService";
+import {getMyRecipeCount} from "../../../services/recipeService"
+import { getFavoriteCount } from "../../../services/favoriteService";
 import { Edit, Mail, User } from "lucide-react";
 import UserForm from "./UserForm";
 import { User as UserType } from "./UserForm";
@@ -23,8 +25,21 @@ const UserProfile: React.FC = () => {
           setError("Token não encontrado");
           return;
         }
-        const userData = await getMyUser();
-        setUser(userData);
+         // Buscar informações do usuário
+         const userData = await getMyUser();
+
+         // Buscar contagem de receitas criadas
+         const recipeCount = await getMyRecipeCount();
+ 
+         // Buscar contagem de receitas favoritas
+         const favoriteCount = await getFavoriteCount();
+ 
+         // Atualizar o estado do usuário com os novos dados
+         setUser({
+           ...userData,
+           recipeCount,
+           favoriteCount,
+         });
       } catch (error) {
         setError("Erro ao buscar usuário");
         console.error("Erro ao buscar usuário:", error);
@@ -177,7 +192,7 @@ const UserProfile: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Receitas Criadas</span>
                         <span className="font-medium">
-                          {user.recipeCount}
+                          {0}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -192,7 +207,7 @@ const UserProfile: React.FC = () => {
                           Receitas Favoritas
                         </span>
                         <span className="font-medium">
-                          {user.favoriteCount}
+                          {0}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">

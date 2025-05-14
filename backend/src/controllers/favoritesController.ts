@@ -31,6 +31,23 @@ export const getAllFavorites = async (req: Request, res: Response): Promise<void
   }
 };
 
+// GET: Quantidade de receitas favoritas do usuário
+export const getFavoriteCount = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = (req as any).user.id; // ID do usuário autenticado
+
+        // Contar o número de receitas favoritas do usuário
+        const count = await prisma.favorite.count({
+            where: { userId },
+        });
+
+        res.status(200).send({ count });
+    } catch (err) {
+        console.error("Error fetching favorite count:", err);
+        res.status(500).send({ error: "Internal server error" });
+    }
+};
+
 // POST: Adicionar uma receita aos favoritos
 export const addFavorite = async (req: Request, res: Response): Promise<void> => {
     try {

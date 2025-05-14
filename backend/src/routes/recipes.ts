@@ -5,6 +5,7 @@ import {
   createRecipe,
   getAllRecipes,
   getRecipeById,
+  getMyRecipeCount,
   updateRecipe,
   deleteRecipe,
   getMyRecipes
@@ -15,6 +16,7 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 const router = Router();
 
 // Rotas para receitas
+router.post("/count", authMiddleware, getMyRecipeCount); // Obter quantidade de receitas do usuário autenticado
 router.post("/create", authMiddleware, createRecipe); // Criar uma nova receita
 router.get("/", getAllRecipes); // Obter todas as receitas
 router.get("/my-recipes", authMiddleware, getMyRecipes); // Obter receitas do usuário autenticado

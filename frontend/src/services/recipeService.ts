@@ -70,6 +70,34 @@ export const getMyRecipes = async (): Promise<any> => {
   }
 };
 
+// Obter a quantidade de receitas do usuário autenticado
+export const getMyRecipeCount = async (): Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token não encontrado");
+  }
+
+  try {
+    const response = await fetch(`${apiURL}/recipes/count`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar quantidade de receitas: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro em getMyRecipeCount:", error);
+    throw error;
+  }
+};
+
 
 // Criar uma nova receita
 export const createRecipe = async (recipeData: {

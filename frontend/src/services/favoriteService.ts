@@ -28,6 +28,35 @@ export const getAllFavorites = async (): Promise<any> => {
   }
 };
 
+// Obter a quantidade de receitas favoritas do usuário
+export const getFavoriteCount = async (): Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token não encontrado");
+  }
+
+  try {
+    const response = await fetch(`${apiURL}/favorites/count`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar quantidade de receitas favoritas: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro em getFavoriteCount:", error);
+    throw error;
+  }
+};
+
+
 // Adicionar uma receita aos favoritos
 export const addFavorite = async (recipeId: string): Promise<any> => {
   const token = localStorage.getItem("token");

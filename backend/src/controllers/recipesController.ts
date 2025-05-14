@@ -218,6 +218,28 @@ export const getMyRecipes = async (req: Request, res: Response): Promise<void> =
   }
 };
 
+// GET: Obter quantiade de receitas criadas por um usuário
+export const getMyRecipeCount = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = (req as any).user; // Usuário autenticado
+
+    // Verificar se o usuário está autenticado
+    if (!user || !user.id) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
+    // Contar o número de receitas do usuário autenticado
+    const count = await prisma.recipe.count({
+      where: { userId: user.id },
+    });
+
+    res.status(200).send({ count });
+  } catch (err) {
+    console.error("Error fetching user's recipe count:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+};
 
 // PUT: Atualizar uma receita
 export const updateRecipe = async (req: Request, res: Response): Promise<void> => {
