@@ -67,31 +67,57 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
   }, [initialData]);
 
   const handleIngredientChange = async (
-    index: number,
-    field: keyof Ingredient,
-    value: string | number
-  ) => {
-    const updatedIngredients = [...ingredients];
-    updatedIngredients[index] = {
-      ...updatedIngredients[index],
-      [field]: value,
-    };
-    setIngredients(updatedIngredients);
-
-    if (field === "name") {
-      setActiveIngredientIndex(index);
-      if (typeof value === "string" && value.length > 1) {
-        try {
-          const results = await searchIngredients(value);
-          setSuggestions(results.map((ingredient: any) => ingredient.name));
-        } catch (error) {
-          console.error("Erro ao buscar sugestões de ingredientes:", error);
-        }
-      } else {
-        setSuggestions([]);
-      }
-    }
+  index: number,
+  field: keyof Ingredient,
+  value: string | number
+) => {
+  const updatedIngredients = [...ingredients];
+  updatedIngredients[index] = {
+    ...updatedIngredients[index],
+    [field]: value,
   };
+
+  // Impede ingredientes duplicados pelo nome (case insensitive)
+  if (field === "name" && typeof value === "string") {
+    const nameLower = value.trim().toLowerCase();
+    const isDuplicate = ingredients.some(
+      (ing, i) =>
+        i !== index &&
+        ing.name.trim().toLowerCase() === nameLower &&
+        nameLower !== ""
+    );
+    if (isDuplicate) {
+      alert("Ingrediente já adicionado!");
+      return;
+    }
+  }
+
+  setIngredients(updatedIngredients);
+
+  if (field === "name") {
+    setActiveIngredientIndex(index);
+    if (typeof value === "string" && value.length > 1) {
+      try {
+        const results = await searchIngredients(value);
+        // Filtra sugestões para não mostrar ingredientes já adicionados
+        const addedNames = ingredients
+          .filter((_, i) => i !== index)
+          .map((ing) => ing.name.trim().toLowerCase());
+        const filteredSuggestions = results
+          .map((ingredient: any) => ingredient.name)
+          .filter(
+            (name: string) =>
+              !addedNames.includes(name.trim().toLowerCase())
+          );
+        setSuggestions(filteredSuggestions);
+      } catch (error) {
+        console.error("Erro ao buscar sugestões de ingredientes:", error);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  }
+};
 
   const selectSuggestion = (index: number, suggestion: string) => {
     const updatedIngredients = [...ingredients];
