@@ -232,6 +232,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
           value={difficulty || ""}
           onChange={(e) => setDifficulty(Number(e.target.value))}
           className="w-full p-2 border border-gray-300 rounded"
+          placeholder="1 (fácil) - 5(padrão) - 10 (difícil)"
           min={1}
           max={10}
         />
@@ -242,6 +243,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
         </label>
         <input
           type="text"
+          placeholder="URL da imagem, de preferência do site Unsplash"
           value={image}
           onChange={(e) => setImage(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded"
@@ -289,7 +291,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
               <button
                 type="button"
                 onClick={() => removeIngredient(index)}
-                className="text-red-500 hover:text-red-700"
+                className="text-red-500 hover:text-red-700 cursor-pointer"
               >
                 Remover
               </button>
@@ -312,7 +314,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
         <button
           type="button"
           onClick={addIngredient}
-          className="text-green-500 hover:text-green-700"
+          className="text-green-500 hover:text-green-700 cursor-pointer"
         >
           Adicionar Ingrediente
         </button>
@@ -337,7 +339,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
         className={`w-full ${
           isEditMode ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
         } text-white p-2 rounded transition-colors ${
-          isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:cursor-pointer"
         }`}
         disabled={isSubmitting}
       >
