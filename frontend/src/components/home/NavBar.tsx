@@ -117,7 +117,7 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
         {isAuthenticated ? (
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors cursor-pointer"
           >
             <LogOut size={20} />
             <span>Sair</span>
@@ -125,7 +125,7 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
         ) : (
           <Link
             to="/login"
-            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
+            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors cursor-pointer"
           >
             <LogOut size={20} />
             <span>Entrar</span>

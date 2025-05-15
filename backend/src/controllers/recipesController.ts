@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { prisma } from "../services/prisma";
 import { generateRecipe } from "../services/geminiAPI";
 import { getPexelsImage } from "../services/pexelsAPI";
+import { findOrCreateIngredients } from "./ingredientsController";
 
 // POST: Criar uma nova receita
 export const createRecipe = async (
@@ -11,7 +12,7 @@ export const createRecipe = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = (req as any).user; // Usuário autenticado
+    const user = (req as any).user;
     const {
       title,
       description,
@@ -21,38 +22,17 @@ export const createRecipe = async (
       servings,
       image,
       isGeneratedByAI,
-      ingredients, // Lista de ingredientes [{ name, quantity, unit }]
+      ingredients,
     } = req.body;
 
-    // Validação básica
     if (!title || !ingredients || ingredients.length === 0) {
       res.status(400).send({ error: "Title and ingredients are required" });
       return;
     }
 
-    // Verificar e criar ingredientes, se necessário
-    const ingredientPromises = ingredients.map(async (ingredient: any) => {
-      let existingIngredient = await prisma.ingredient.findUnique({
-        where: { name: ingredient.name },
-      });
+    // Usa a função utilitária
+    const processedIngredients = await findOrCreateIngredients(ingredients);
 
-      if (!existingIngredient) {
-        existingIngredient = await prisma.ingredient.create({
-          data: { name: ingredient.name },
-        });
-      }
-
-      return {
-        ingredientId: existingIngredient.id,
-        ingredientName: existingIngredient.name,
-        quantity: ingredient.quantity,
-        unit: ingredient.unit,
-      };
-    });
-
-    const processedIngredients = await Promise.all(ingredientPromises);
-
-    // Criar a receita no banco de dados
     const recipe = await prisma.recipe.create({
       data: {
         title,
@@ -63,7 +43,7 @@ export const createRecipe = async (
         servings,
         image,
         isGeneratedByAI,
-        userId: user.id, // Relaciona a receita ao usuário autenticado
+        userId: user.id,
         ingredients: {
           create: processedIngredients,
         },
@@ -71,7 +51,7 @@ export const createRecipe = async (
       include: {
         ingredients: {
           include: {
-            ingredient: true, // Inclui os detalhes dos ingredientes
+            ingredient: true,
           },
         },
       },
@@ -90,36 +70,11 @@ export const generateRecipeWithAI = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = (req as any).user; // Usuário autenticado
-    const { ingredients, observations } = req.body; // Lista de ingredientes como string
+    const user = (req as any).user;
+    const { ingredients, observations } = req.body;
 
-    // Validação básica
-    //if (!ingredients || ingredients.length === 0) {
-    //  res.status(400).send({ error: "Ingredients are required" });
-    //  return;
-    //}
-
-    // Verificar e criar ingredientes no banco de dados, se necessário
-    const ingredientPromises = ingredients.map(async (ingredient: any) => {
-      let existingIngredient = await prisma.ingredient.findUnique({
-        where: { name: ingredient.name },
-      });
-
-      if (!existingIngredient) {
-        existingIngredient = await prisma.ingredient.create({
-          data: { name: ingredient.name },
-        });
-      }
-
-      return {
-        ingredientId: existingIngredient.id,
-        ingredientName: existingIngredient.name,
-        quantity: ingredient.quantity || null,
-        unit: ingredient.unit || null,
-      };
-    });
-
-    const processedIngredients = await Promise.all(ingredientPromises);
+    // Usa a função utilitária
+    const processedIngredients = await findOrCreateIngredients(ingredients);
 
     // Chamar a função da IA para gerar a receita
     const aiGeneratedRecipe = await generateRecipe(

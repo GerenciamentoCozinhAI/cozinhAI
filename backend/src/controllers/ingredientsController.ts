@@ -162,3 +162,39 @@ export const deleteIngredient = async (req: Request, res: Response): Promise<voi
     res.status(500).send({ error: "Internal server error" });
   }
 };
+
+function capitalizeIngredientName(str: string) {
+  const cleaned = str.trim().replace(/\s+/g, " ").toLowerCase();
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+}
+
+export async function findOrCreateIngredients(ingredients: any[]) {
+  return Promise.all(
+    ingredients.map(async (ingredient) => {
+      // Usa a função de capitalização para normalizar o nome
+      const normalizedName = capitalizeIngredientName(ingredient.name);
+
+      let existingIngredient = await prisma.ingredient.findFirst({
+        where: {
+          name: {
+            equals: normalizedName,
+            mode: "insensitive", // Ignora maiúsculas/minúsculas
+          },
+        },
+      });
+
+      if (!existingIngredient) {
+        existingIngredient = await prisma.ingredient.create({
+          data: { name: normalizedName },
+        });
+      }
+
+      return {
+        ingredientId: existingIngredient.id,
+        ingredientName: existingIngredient.name,
+        quantity: ingredient.quantity,
+        unit: ingredient.unit,
+      };
+    })
+  );
+}
