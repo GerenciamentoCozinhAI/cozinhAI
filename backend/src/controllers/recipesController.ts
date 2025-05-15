@@ -94,10 +94,10 @@ export const generateRecipeWithAI = async (
     const { ingredients, observations } = req.body; // Lista de ingredientes como string
 
     // Validação básica
-    if (!ingredients || ingredients.length === 0) {
-      res.status(400).send({ error: "Ingredients are required" });
-      return;
-    }
+    //if (!ingredients || ingredients.length === 0) {
+    //  res.status(400).send({ error: "Ingredients are required" });
+    //  return;
+    //}
 
     // Verificar e criar ingredientes no banco de dados, se necessário
     const ingredientPromises = ingredients.map(async (ingredient: any) => {
