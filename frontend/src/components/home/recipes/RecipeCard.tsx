@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useNavigate } from "react-router-dom"
-import { Clock, Utensils, Calendar, Heart, Bot, BotIcon, BotOff, BotMessageSquare } from "lucide-react"
+import { Clock, Utensils, Calendar, Heart, Bot} from "lucide-react"
 import DifficultyRating from "./DifficultyRating"
 
 interface RecipeCardProps {

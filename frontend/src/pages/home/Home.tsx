@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "../../components/home/NavBar";
 import { Menu } from "lucide-react";
 import { Outlet } from "react-router-dom";
+import Footer from "../../components/home/Footer";
 
 export default function Home() {
   const [showNavbar, setShowNavbar] = useState(false); // começa escondida!
@@ -42,7 +43,12 @@ export default function Home() {
 
       {/* Conteúdo principal */}
       <main className="flex-1 p-8 flex items-center justify-center overflow-y-auto md:ml-64">
-        <Outlet />
+        <div className="w-full">
+          <Outlet />
+          <div className="pt-15">
+            <Footer />
+          </div>
+        </div>
       </main>
     </div>
   );
