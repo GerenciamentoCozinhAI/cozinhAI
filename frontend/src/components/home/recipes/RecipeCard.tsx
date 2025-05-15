@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useNavigate } from "react-router-dom"
-import { Clock, Utensils, Calendar, Heart } from "lucide-react"
+import { Clock, Utensils, Calendar, Heart, Bot} from "lucide-react"
 import DifficultyRating from "./DifficultyRating"
 
 interface RecipeCardProps {
@@ -46,9 +46,10 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           onClick={handleView}
         />
         {isGeneratedByAI && (
-          <span className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-md font-medium">
+            <span className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-md font-medium flex items-center gap-1">
             Gerada por IA
-          </span>
+            <Bot size={16} />
+            </span>
         )}
       </div>
       <div className="p-4">

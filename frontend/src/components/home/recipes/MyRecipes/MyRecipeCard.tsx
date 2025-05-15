@@ -3,7 +3,7 @@
 import type React from "react"
 import { useNavigate } from "react-router-dom"
 import { deleteRecipe } from "../../../../services/recipeService"
-import { Edit, Trash2, Clock, Utensils, Calendar, Heart } from "lucide-react"
+import { Edit, Trash2, Clock, Utensils, Calendar, Heart, Bot } from "lucide-react"
 import DifficultyRating from "../DifficultyRating"
 
 interface RecipeCardProps {
@@ -66,9 +66,10 @@ const MyRecipeCard: React.FC<RecipeCardProps> = ({
           onClick={handleView}
         />
         {isGeneratedByAI && (
-          <span className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-md font-medium">
+          <span className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-md font-medium flex items-center gap-1">
             Gerada por IA
-          </span>
+            <Bot size={16} />
+            </span>
         )}
         <div className="absolute top-2 right-2 flex space-x-2">
           <button
