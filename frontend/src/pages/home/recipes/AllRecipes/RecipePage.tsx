@@ -151,19 +151,21 @@ const RecipePage: React.FC = () => {
             Ingredientes
           </h2>
           <ul className="space-y-2">
-            {recipe.ingredients.map((ingredient: Ingredient, index: number) => (
+            {recipe.ingredients.map((ingredient: Ingredient, index: number) =>
+              ingredient.ingredientName ? (
               <li key={index} className="flex items-start gap-2 text-gray-700">
                 <ChevronRight
-                  size={18}
-                  className="text-green-500 mt-1 flex-shrink-0"
+                size={18}
+                className="text-green-500 mt-1 flex-shrink-0"
                 />
                 <span>
-                  <strong>{ingredient.ingredientName}</strong>
-                  {ingredient.quantity > 0 && ` - ${ingredient.quantity}`}
-                  {ingredient.unit && ` ${ingredient.unit}`}
+                <strong>{ingredient.ingredientName}</strong>
+                {ingredient.quantity > 0 && ` - ${ingredient.quantity}`}
+                {ingredient.unit && ` ${ingredient.unit}`}
                 </span>
               </li>
-            ))}
+              ) : null
+            )}
           </ul>
         </div>
       )}

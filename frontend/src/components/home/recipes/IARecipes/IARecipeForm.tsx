@@ -118,7 +118,6 @@ const IARecipeForm: React.FC<IARecipeFormProps> = ({ onSuccess }) => {
                     value={ingredient.name}
                     onChange={(e) => handleIngredientChange(index, "name", e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                    required
                   />
                   {activeIngredientIndex === index && suggestions.length > 0 && (
                     <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 w-full max-h-60 overflow-y-auto">
@@ -148,8 +147,7 @@ const IARecipeForm: React.FC<IARecipeFormProps> = ({ onSuccess }) => {
                     placeholder="Unidade"
                     value={ingredient.unit}
                     onChange={(e) => handleIngredientChange(index, "unit", e.target.value)}
-                    className="w-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                    required
+                    className="w-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"                   
                   />
                   <button
                     type="button"
