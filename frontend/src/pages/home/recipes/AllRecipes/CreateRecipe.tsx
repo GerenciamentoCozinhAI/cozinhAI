@@ -1,7 +1,7 @@
 // src/pages/home/recipes/CreateRecipe.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import RecipeForm from "../../../components/home/recipes/RecipeForm";
+import RecipeForm from "../../../../components/home/recipes/RecipeForm";
 
 const CreateRecipe: React.FC = () => {
   const navigate = useNavigate();

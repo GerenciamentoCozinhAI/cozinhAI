@@ -1,9 +1,12 @@
 //src/pages/home/recipes/EditRecipe.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import RecipeForm from "../../../components/home/recipes/RecipeForm";
-import { getRecipeById, updateRecipe } from "../../../services/recipeService";
-import Loading from "../../../components/loading/Loading";
+import RecipeForm from "../../../../components/home/recipes/RecipeForm";
+import {
+  getRecipeById,
+  updateRecipe,
+} from "../../../../services/recipeService";
+import Loading from "../../../../components/loading/Loading";
 
 const EditRecipe: React.FC = () => {
   const { id } = useParams<{ id: string }>();

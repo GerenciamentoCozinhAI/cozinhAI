@@ -10,12 +10,13 @@ import LandingPage from "./pages/LandingPage";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
 import UserProfile from "./components/home/userProfile/UserProfile";
-import MyRecipeList from "./pages/home/recipes/MyRecipeList";
-import RecipeList from "./pages/home/recipes/RecipeList";
-import RecipePage from "./pages/home/recipes/RecipePage";
-import CreateRecipe from "./pages/home/recipes/CreateRecipe";
-import CreateIARecipe from "./pages/home/recipes/CreateIARecipe";
-import EditRecipe from "./pages/home/recipes/EditRecipe";
+import MyRecipeList from "./pages/home/recipes/MyRecipes/MyRecipeList";
+import RecipeList from "./pages/home/recipes/AllRecipes/RecipeList";
+import RecipePage from "./pages/home/recipes/AllRecipes/RecipePage";
+import CreateRecipe from "./pages/home/recipes/AllRecipes/CreateRecipe";
+import CreateIARecipe from "./pages/home/recipes/AllRecipes/CreateIARecipe";
+import EditRecipe from "./pages/home/recipes/AllRecipes/EditRecipe";
+import FavoriteList from "./pages/home/recipes/FavoriteRecipes/FavoriteList";
 
 export default function App() {
   return (
@@ -69,9 +70,7 @@ export default function App() {
 
         <Route path="recipes" element={<RecipeList />} />
 
-
         <Route path="recipe/:id" element={<RecipePage />} />
-
 
         {/* Exemplo de rota interna */}
         <Route
@@ -97,7 +96,7 @@ export default function App() {
           path="favorites"
           element={
             <PrivateRoute>
-              <div>Conteúdo Protegido</div>
+              <FavoriteList />
             </PrivateRoute>
           }
         />

@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { getAllRecipes } from "../../../services/recipeService";
-import RecipeCard from "../../../components/home/recipes/RecipeCard";
-import Loading from "../../../components/loading/Loading";
+import { getMyRecipes } from "../../../../services/recipeService";
+import MyRecipeCard from "../../../../components/home/recipes/MyRecipes/MyRecipeCard";
+import Loading from "../../../../components/loading/Loading";
 
-const RecipeList: React.FC = () => {
+const MyRecipeList: React.FC = () => {
   const [recipes, setRecipes] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchRecipes = async () => {
+    const fetchMyRecipes = async () => {
       try {
-        const data = await getAllRecipes();
+        const data = await getMyRecipes();
         setRecipes(data);
       } catch (error) {
-        console.error("Erro ao buscar receitas:", error);
+        console.error("Erro ao buscar minhas receitas:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchRecipes();
+    fetchMyRecipes();
   }, []);
 
+  const handleDelete = (id: string) => {
+    setRecipes((prevRecipes) =>
+      prevRecipes.filter((recipe) => recipe.id !== id)
+    );
+  };
+
   if (isLoading) {
-    return <Loading message="Carregando receitas..." />;
+    return <Loading message="Carregando suas receitas..." />;
   }
 
   if (recipes.length === 0) {
@@ -33,7 +39,7 @@ const RecipeList: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {recipes.map((recipe) => (
-        <RecipeCard
+        <MyRecipeCard
           key={recipe.id}
           id={recipe.id}
           title={recipe.title}
@@ -45,10 +51,11 @@ const RecipeList: React.FC = () => {
           isGeneratedByAI={recipe.isGeneratedByAI}
           createdAt={recipe.createdAt}
           likes={recipe.likes}
+          onDelete={handleDelete}
         />
       ))}
     </div>
   );
 };
 
-export default RecipeList;
+export default MyRecipeList;
