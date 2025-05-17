@@ -14,6 +14,7 @@ import MyRecipeList from "./pages/home/recipes/MyRecipeList";
 import RecipeList from "./pages/home/recipes/RecipeList";
 import RecipePage from "./pages/home/recipes/RecipePage";
 import CreateRecipe from "./pages/home/recipes/CreateRecipe";
+import CreateIARecipe from "./pages/home/recipes/CreateIARecipe";
 import EditRecipe from "./pages/home/recipes/EditRecipe";
 
 export default function App() {
@@ -123,7 +124,7 @@ export default function App() {
           path="ChefIA"
           element={
             <PrivateRoute>
-              <div>Conteúdo Protegido</div>
+              <CreateIARecipe />
             </PrivateRoute>
           }
         />

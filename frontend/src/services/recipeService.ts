@@ -138,6 +138,39 @@ export const createRecipe = async (recipeData: {
   }
 };
 
+// Criar uma receita gerada por IA
+export const createRecipeWithAI = async (data: {
+  ingredients: { name: string; quantity: number; unit: string }[];
+  observations?: string;
+}): Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token não encontrado");
+  }
+
+  try {
+    const response = await fetch(`${apiURL}/recipes/generate-with-ai`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao criar receita com IA: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro em createRecipeWithAI:", error);
+    throw error;
+  }
+};
+
+
 // Atualizar uma receita
 export const updateRecipe = async (
   id: string,
