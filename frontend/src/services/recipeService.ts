@@ -23,12 +23,19 @@ export const getAllRecipes = async (): Promise<any> => {
 
 // Obter uma receita pelo ID
 export const getRecipeById = async (id: string): Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  const headers: any = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   try {
     const response = await fetch(`${apiURL}/recipes/${id}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
     });
 
     if (!response.ok) {

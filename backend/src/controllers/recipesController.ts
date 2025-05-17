@@ -5,6 +5,7 @@ import { prisma } from "../services/prisma";
 import { generateRecipe } from "../services/geminiAPI";
 import { getPexelsImage } from "../services/pexelsAPI";
 import { findOrCreateIngredients } from "./ingredientsController";
+import { getUserFromRequest } from "../utils/getUserFromRequest";
 
 // POST: Criar uma nova receita
 export const createRecipe = async (
@@ -212,7 +213,6 @@ export const getRecipeById = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const user = (req as any).user; // Usuário autenticado
 
     const recipe = await prisma.recipe.findUnique({
       where: { id },
@@ -242,22 +242,29 @@ export const getRecipeById = async (
       return;
     }
 
-    // Verificar se o usuário já curtiu a receita
-    const userLiked = user
-      ? await prisma.like.findFirst({
-          where: {
-            recipeId: id,
-            userId: user.id,
-          },
-        })
-      : null;
+    // Tenta pegar o usuário, mas não obriga
+    let user = null;
+    try {
+      const authData = await getUserFromRequest(req);
+      user = authData?.user || null;
+    } catch (e) {
+      user = null;
+    }
+
+    // Busca like/favorito só se houver usuário autenticado
+    let isLiked = false;
+    let isFavorited = false;
+    if (user) {
+      isLiked = !!(await prisma.like.findFirst({ where: { recipeId: id, userId: user.id } }));
+      isFavorited = !!(await prisma.favorite.findFirst({ where: { recipeId: id, userId: user.id } }));
+    }
 
     res.status(200).send({
       ...recipe,
-      isLiked: !!userLiked, // Retorna true se o usuário já curtiu
+      isLiked,
+      isFavorited,
     });
   } catch (err) {
-    console.error("Error fetching recipe by ID:", err);
     res.status(500).send({ error: "Internal server error" });
   }
 };
