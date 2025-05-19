@@ -4,6 +4,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import AuthCallback from "./pages/auth/AuthCallback";
 import AuthError from "./pages/errors/AuthError";
+import NotFound from "./pages/errors/NotFound";
 import Home from "./pages/home/Home";
 import HomeMain from "./components/home/HomeMain";
 import LandingPage from "./pages/LandingPage";
@@ -48,6 +49,8 @@ export default function App() {
           </PublicRoute>
         }
       />
+      {/* Página 404 - Not Found GERAL*/}
+      <Route path="*" element={<NotFound />} />
 
       {/* Callback de auth e erro */}
       <Route path="auth/callback" element={<AuthCallback />} />
@@ -67,6 +70,9 @@ export default function App() {
             </PublicRoute>
           }
         />
+
+        {/*Página 404 - Not Found de Home*/}
+        <Route path="*" element={<NotFound />} />
 
         <Route path="recipes" element={<RecipeList />} />
 
