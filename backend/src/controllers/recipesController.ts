@@ -2,8 +2,8 @@
 
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
-import { generateRecipe, validateWithAI } from "../services/geminiAPI";
-import { getPexelsImage } from "../services/pexelsAPI";
+import { generateRecipe, validateWithAI } from "../APIs/geminiAPI";
+import { getPexelsImage } from "../APIs/pexelsAPI";
 import { findOrCreateIngredients } from "./ingredientsController";
 import { getUserFromRequest } from "../utils/getUserFromRequest";
 
