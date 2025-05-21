@@ -1,7 +1,7 @@
 //src/controllers/likesController.ts
 
 import { Request, Response } from "express";
-import { prisma } from "../services/prisma";
+import { prisma } from "../database/prisma";
 
 // POST: Adicionar um like a uma receita
 export const addLike = async (req: Request, res: Response): Promise<void> => {
@@ -37,7 +37,10 @@ export const addLike = async (req: Request, res: Response): Promise<void> => {
 };
 
 // DELETE: Remover um like de uma receita
-export const removeLike = async (req: Request, res: Response): Promise<void> => {
+export const removeLike = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { recipeId } = req.params; // ID da receita a ser descurtida
     const userId = (req as any).user.id; // ID do usuário autenticado

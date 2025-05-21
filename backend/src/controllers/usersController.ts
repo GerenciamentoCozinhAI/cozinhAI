@@ -1,6 +1,6 @@
 //src/controllers/userController.ts'
 import { Request, Response } from "express";
-import { prisma } from "../services/prisma";
+import { prisma } from "../database/prisma";
 
 // GET: Buscar informações do auth.users
 export const getMyUser = async (req: Request, res: Response): Promise<void> => {

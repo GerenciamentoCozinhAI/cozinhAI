@@ -1,7 +1,7 @@
 // src/controllers/recipesController.ts
 
 import { Request, Response } from "express";
-import { prisma } from "../services/prisma";
+import { prisma } from "../database/prisma";
 import { generateRecipe, validateWithAI } from "../services/geminiAPI";
 import { getPexelsImage } from "../services/pexelsAPI";
 import { findOrCreateIngredients } from "./ingredientsController";
@@ -32,9 +32,15 @@ export const createRecipe = async (
     }
 
     // Validação IA dos ingredientes
-    const validation = await validateWithAI(ingredients, description, instructions);
+    const validation = await validateWithAI(
+      ingredients,
+      description,
+      instructions
+    );
     if (!validation.isValid) {
-      res.status(400).send({ error: validation.reason || "Ingredientes inválidos." });
+      res
+        .status(400)
+        .send({ error: validation.reason || "Ingredientes inválidos." });
       return;
     }
 
@@ -93,12 +99,10 @@ export const generateRecipeWithAI = async (
 
     // Verifica se a receita pode ser feita
     if (aiGeneratedRecipe.isPossibleToMake === false) {
-      res
-        .status(400)
-        .send({
-          error:
-            "Não é possível gerar uma receita viável com os ingredientes e observações fornecidos.",
-        });
+      res.status(400).send({
+        error:
+          "Não é possível gerar uma receita viável com os ingredientes e observações fornecidos.",
+      });
       return;
     }
 

@@ -1,7 +1,7 @@
 // src/controllers/authController.ts
 import { Request, Response } from "express";
-import { supabase } from "../services/supabase";
-import { prisma } from "../services/prisma";
+import { supabase } from "../database/supabase";
+import { prisma } from "../database/prisma";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -110,7 +110,10 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const googleAuth = async (req: Request, res: Response): Promise<void> => {
+export const googleAuth = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id, email, full_name, avatar_url } = req.body;
 
@@ -136,7 +139,9 @@ export const googleAuth = async (req: Request, res: Response): Promise<void> => 
       });
     }
 
-    res.status(200).send({ message: "Usuário sincronizado com sucesso.", user });
+    res
+      .status(200)
+      .send({ message: "Usuário sincronizado com sucesso.", user });
   } catch (err) {
     console.error("Erro ao sincronizar usuário com o banco de dados:", err);
     res.status(500).send({ error: "Erro interno no servidor." });

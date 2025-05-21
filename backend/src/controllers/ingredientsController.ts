@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
-import { prisma } from "../services/prisma";
+import { prisma } from "../database/prisma";
 
 // POST: Criar um novo ingrediente (somente para usuários autenticados)
-export const createIngredient = async (req: Request, res: Response): Promise<void> => {
+export const createIngredient = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user; // Usuário autenticado
 
@@ -39,7 +42,10 @@ export const createIngredient = async (req: Request, res: Response): Promise<voi
 };
 
 // GET: Listar todos os ingredientes
-export const getAllIngredients = async (req: Request, res: Response): Promise<void> => {
+export const getAllIngredients = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const ingredients = await prisma.ingredient.findMany();
     res.status(200).send(ingredients);
@@ -50,7 +56,10 @@ export const getAllIngredients = async (req: Request, res: Response): Promise<vo
 };
 
 // GET: Buscar um ingrediente pelo nome
-export const getIngredientByName = async (req: Request, res: Response): Promise<void> => {
+export const getIngredientByName = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { name } = req.params;
 
@@ -71,7 +80,10 @@ export const getIngredientByName = async (req: Request, res: Response): Promise<
 };
 
 // GET: Search ingredients by name (for autocomplete)
-export const searchIngredients = async (req: Request, res: Response): Promise<void> => {
+export const searchIngredients = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     console.log("Query recebida:", req.query);
     const { name } = req.query;
@@ -99,7 +111,10 @@ export const searchIngredients = async (req: Request, res: Response): Promise<vo
 };
 
 // PUT: Atualizar um ingrediente (somente para usuários autenticados)
-export const updateIngredient = async (req: Request, res: Response): Promise<void> => {
+export const updateIngredient = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user; // Usuário autenticado
 
@@ -116,7 +131,9 @@ export const updateIngredient = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const existingIngredient = await prisma.ingredient.findUnique({ where: { id } });
+    const existingIngredient = await prisma.ingredient.findUnique({
+      where: { id },
+    });
 
     if (!existingIngredient) {
       res.status(404).send({ error: "Ingredient not found" });
@@ -136,7 +153,10 @@ export const updateIngredient = async (req: Request, res: Response): Promise<voi
 };
 
 // DELETE: Remover um ingrediente (somente para usuários autenticados)
-export const deleteIngredient = async (req: Request, res: Response): Promise<void> => {
+export const deleteIngredient = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user; // Usuário autenticado
 
@@ -147,7 +167,9 @@ export const deleteIngredient = async (req: Request, res: Response): Promise<voi
 
     const { id } = req.params;
 
-    const existingIngredient = await prisma.ingredient.findUnique({ where: { id } });
+    const existingIngredient = await prisma.ingredient.findUnique({
+      where: { id },
+    });
 
     if (!existingIngredient) {
       res.status(404).send({ error: "Ingredient not found" });
