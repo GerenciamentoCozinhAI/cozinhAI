@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
 import { generateRecipe, validateWithAI } from "../APIs/geminiAPI";
 import { getPexelsImage } from "../APIs/pexelsAPI";
-import { findOrCreateIngredients } from "./ingredientsController";
+import { findOrCreateIngredients } from "../services/ingredientsService";
 import { getUserFromRequest } from "../utils/getUserFromRequest";
 
 // POST: Criar uma nova receita
