@@ -18,18 +18,30 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          console.error("Token não encontrado");
+          setUser(null); // visitante, não faz logout
           return;
         }
         const userData = await getMyUser();
         setUser(userData);
-      } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
+      } catch (error: any) {
+        // Só faz logout automático se estiver autenticado
+        if (
+          isAuthenticated &&
+          (error.message?.toLowerCase().includes("401") ||
+            error.message?.toLowerCase().includes("invalid") ||
+            error.message?.toLowerCase().includes("jwt") ||
+            error.message?.toLowerCase().includes("expired"))
+        ) {
+          logout();
+        } else {
+          setUser(null); // visitante ou outro erro
+          console.error("Erro ao buscar usuário:", error);
+        }
       }
     };
-  
+
     fetchUser();
-  }, []);
+  }, [logout, isAuthenticated]);
 
   return (
     <div className="h-screen w-64 bg-[#1e5128] text-white flex flex-col overflow-y-auto">
@@ -47,14 +59,17 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
       <div className="p-4 flex flex-col items-center border-b border-[#4e9f3d]/30">
         <Link to="/home/profile" className="group flex flex-col items-center">
           <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#8fd14f] group-hover:border-white transition-all duration-200">
-        <img
-          src={user?.avatar! || "https://sistemas.ft.unicamp.br/agenda/imagens/sem_foto.png"}
-          alt="Foto de perfil"
-          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-200"
-        />
+            <img
+              src={
+                user?.avatar! ||
+                "https://sistemas.ft.unicamp.br/agenda/imagens/sem_foto.png"
+              }
+              alt="Foto de perfil"
+              className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-200"
+            />
           </div>
           <p className="mt-2 text-center font-medium group-hover:text-[#8fd14f] transition-colors">
-        {user?.name || "Meu Perfil"}
+            {user?.name || "Meu Perfil"}
           </p>
         </Link>
       </div>
