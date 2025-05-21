@@ -125,4 +125,4 @@ npm run build        # Gera a build de produção
 
 ## 👨‍💻 Autor
 
-Projeto desenvolvido por Esly Caetano para a disciplina de Gerenciamento de Projetos — 2024.
+Projeto desenvolvido por Esly Caetano para a disciplina de Gerenciamento de Projetos — 2025.
