@@ -22,8 +22,7 @@ export default function PrivateRoute({
       } catch (err) {
         console.error("Unexpected error:", err);
       } finally {
-        setTimeout(() => setLoading(false), 500);
-        //setLoading(false);
+        setLoading(false);
       }
     };
     checkAuth();

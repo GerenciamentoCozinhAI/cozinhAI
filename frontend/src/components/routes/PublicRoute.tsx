@@ -22,7 +22,7 @@ export default function PublicRoute({
       } catch (err) {
         console.error("Unexpected error:", err);
       } finally {
-        setTimeout(() => setLoading(false), 500);
+        setLoading(false);
       }
     };
     checkAuth();
