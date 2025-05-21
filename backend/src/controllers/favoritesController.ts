@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as favoritesService from "../services/favoritesService";
+import * as favoritesService from "../services/favoriteService";
 
 // GET: Obter todas as receitas favoritas do usuário
 export const getAllFavorites = async (req: Request, res: Response): Promise<void> => {

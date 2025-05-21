@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
-import * as ingredientsService from "../services/ingredientsService";
+import * as ingredientsService from "../services/ingredientService";
 
 // POST: Criar um novo ingrediente
-export const createIngredient = async (req: Request, res: Response): Promise<void> => {
+export const createIngredient = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user;
     if (!user) {
@@ -18,7 +21,10 @@ export const createIngredient = async (req: Request, res: Response): Promise<voi
 };
 
 // GET: Listar todos os ingredientes
-export const getAllIngredients = async (req: Request, res: Response): Promise<void> => {
+export const getAllIngredients = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const ingredients = await ingredientsService.getAllIngredients();
     res.status(200).send(ingredients);
@@ -28,7 +34,10 @@ export const getAllIngredients = async (req: Request, res: Response): Promise<vo
 };
 
 // GET: Buscar um ingrediente pelo nome
-export const getIngredientByName = async (req: Request, res: Response): Promise<void> => {
+export const getIngredientByName = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { name } = req.params;
     const ingredient = await ingredientsService.getIngredientByName(name);
@@ -43,14 +52,19 @@ export const getIngredientByName = async (req: Request, res: Response): Promise<
 };
 
 // GET: Search ingredients by name (autocomplete)
-export const searchIngredients = async (req: Request, res: Response): Promise<void> => {
+export const searchIngredients = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { name } = req.query;
     if (!name) {
       res.status(400).send({ error: "Ingredient name is required" });
       return;
     }
-    const ingredients = await ingredientsService.searchIngredients(String(name));
+    const ingredients = await ingredientsService.searchIngredients(
+      String(name)
+    );
     res.status(200).send(ingredients);
   } catch (err) {
     res.status(500).send({ error: "Internal server error" });
@@ -58,7 +72,10 @@ export const searchIngredients = async (req: Request, res: Response): Promise<vo
 };
 
 // PUT: Atualizar um ingrediente
-export const updateIngredient = async (req: Request, res: Response): Promise<void> => {
+export const updateIngredient = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user;
     if (!user) {
@@ -67,7 +84,10 @@ export const updateIngredient = async (req: Request, res: Response): Promise<voi
     }
     const { id } = req.params;
     const { name } = req.body;
-    const updatedIngredient = await ingredientsService.updateIngredient(id, name);
+    const updatedIngredient = await ingredientsService.updateIngredient(
+      id,
+      name
+    );
     res.status(200).send(updatedIngredient);
   } catch (err: any) {
     res.status(400).send({ error: err.message || "Internal server error" });
@@ -75,7 +95,10 @@ export const updateIngredient = async (req: Request, res: Response): Promise<voi
 };
 
 // DELETE: Remover um ingrediente
-export const deleteIngredient = async (req: Request, res: Response): Promise<void> => {
+export const deleteIngredient = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user = (req as any).user;
     if (!user) {
