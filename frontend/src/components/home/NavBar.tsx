@@ -103,11 +103,11 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
           </Link>
 
           <Link
-            to="/home/chefIA"
+            to="/home/chef-IA"
             className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#4e9f3d]/20 transition-colors"
           >
             <Bot size={20} />
-            <span>ChefIA</span>
+            <span>Chef-IA</span>
           </Link>
         </div>
       </nav>

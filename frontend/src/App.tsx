@@ -126,7 +126,7 @@ export default function App() {
         />
 
         <Route
-          path="ChefIA"
+          path="Chef-IA"
           element={
             <PrivateRoute>
               <CreateIARecipe />

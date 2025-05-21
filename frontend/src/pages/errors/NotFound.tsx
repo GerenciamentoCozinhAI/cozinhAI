@@ -9,9 +9,6 @@ export default function NotFound() {
         <div className="bg-gradient-to-r from-green-600 to-green-500 p-6 text-white text-center">
           <ChefHat className="h-16 w-16 mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">404</h1>
-          <p className="text-xl md:text-2xl font-medium mt-2">
-            Receita não encontrada
-          </p>
         </div>
 
         <div className="p-8 text-center">
