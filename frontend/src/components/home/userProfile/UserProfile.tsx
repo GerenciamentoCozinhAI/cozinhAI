@@ -38,8 +38,8 @@ const UserProfile: React.FC = () => {
          // Atualizar o estado do usuário com os novos dados
          setUser({
            ...userData,
-           recipeCount,
-           favoriteCount,
+           recipeCount: recipeCount.count,
+           favoriteCount : favoriteCount.count,
          });
       } catch (error) {
         setError("Erro ao buscar usuário");
@@ -193,7 +193,7 @@ const UserProfile: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Receitas Criadas</span>
                         <span className="font-medium">
-                          {0}
+                          {user.recipeCount}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -208,7 +208,7 @@ const UserProfile: React.FC = () => {
                           Receitas Favoritas
                         </span>
                         <span className="font-medium">
-                          {0}
+                          {user.favoriteCount}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
