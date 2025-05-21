@@ -8,6 +8,7 @@ import { getFavoriteCount } from "../../../services/favoriteService";
 import { Edit, Mail, User } from "lucide-react";
 import UserForm from "./UserForm";
 import { User as UserType } from "./UserForm";
+import Loading from "../../loading/Loading";
 
 const UserProfile: React.FC = () => {
   const [user, setUser] = useState<UserType | null>(null);
@@ -75,8 +76,8 @@ const UserProfile: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#4e9f3d]"></div>
+      <div className="flex items-center justify-center h-screen">
+        <Loading message="Carregando perfil..." />
       </div>
     );
   }
