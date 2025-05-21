@@ -67,7 +67,9 @@ export const getMyRecipes = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar receitas do usuário: ${response.statusText}`);
+      throw new Error(
+        `Erro ao buscar receitas do usuário: ${response.statusText}`
+      );
     }
 
     return await response.json();
@@ -95,7 +97,9 @@ export const getMyRecipeCount = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar quantidade de receitas: ${response.statusText}`);
+      throw new Error(
+        `Erro ao buscar quantidade de receitas: ${response.statusText}`
+      );
     }
 
     return await response.json();
@@ -104,7 +108,6 @@ export const getMyRecipeCount = async (): Promise<any> => {
     throw error;
   }
 };
-
 
 // Criar uma nova receita
 export const createRecipe = async (recipeData: {
@@ -135,7 +138,8 @@ export const createRecipe = async (recipeData: {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao criar receita: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -167,7 +171,8 @@ export const createRecipeWithAI = async (data: {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao criar receita com IA: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
     }
 
     return await response.json();
@@ -176,7 +181,6 @@ export const createRecipeWithAI = async (data: {
     throw error;
   }
 };
-
 
 // Atualizar uma receita
 export const updateRecipe = async (

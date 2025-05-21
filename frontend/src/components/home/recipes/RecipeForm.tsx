@@ -150,9 +150,9 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ onSuccess, initialData, onSubmi
         alert("Receita criada com sucesso!")
       }
       onSuccess()
-    } catch (error) {
-      console.error("Erro ao salvar receita:", error)
-      alert("Erro ao salvar receita.")
+    } catch (error: any) {
+      console.error("Erro ao salvar receita:", error.error)
+      alert("Erro ao salvar receita: " + error.error)
     } finally {
       setIsSubmitting(false)
     }

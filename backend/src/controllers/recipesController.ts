@@ -2,7 +2,7 @@
 
 import { Request, Response } from "express";
 import { prisma } from "../services/prisma";
-import { generateRecipe } from "../services/geminiAPI";
+import { generateRecipe, validateWithAI } from "../services/geminiAPI";
 import { getPexelsImage } from "../services/pexelsAPI";
 import { findOrCreateIngredients } from "./ingredientsController";
 import { getUserFromRequest } from "../utils/getUserFromRequest";
@@ -28,6 +28,13 @@ export const createRecipe = async (
 
     if (!title || !ingredients || ingredients.length === 0) {
       res.status(400).send({ error: "Title and ingredients are required" });
+      return;
+    }
+
+    // Validação IA dos ingredientes
+    const validation = await validateWithAI(ingredients, description, instructions);
+    if (!validation.isValid) {
+      res.status(400).send({ error: validation.reason || "Ingredientes inválidos." });
       return;
     }
 
@@ -74,62 +81,31 @@ export const generateRecipeWithAI = async (
     const user = (req as any).user;
     const { ingredients, observations } = req.body;
 
-    // Usa a função utilitária
-    const processedIngredients = await findOrCreateIngredients(ingredients);
-
     // Chamar a função da IA para gerar a receita
     const aiGeneratedRecipe = await generateRecipe(
-      processedIngredients.map((i) => ({
-        name: i.ingredientName,
+      ingredients.map((i: any) => ({
+        name: i.name,
         quantity: i.quantity,
         unit: i.unit,
       })),
       observations
     );
 
-    // Extrair nomes dos ingredientes enviados pelo usuário
-    const originalIngredientNames = ingredients.map((i: any) =>
-      i.name.toLowerCase()
-    );
-
-    // Verificar se a IA adicionou ingredientes extras
-    const allIngredientsFromAI = aiGeneratedRecipe.ingredients as {
-      name: string;
-      quantity: number;
-      unit: string;
-    }[];
-
-    const additionalIngredients = allIngredientsFromAI.filter(
-      (aiIng) => !originalIngredientNames.includes(aiIng.name.toLowerCase())
-    );
-
-    // Criar ingredientes extras no banco, se necessário
-    const additionalIngredientRecords = await Promise.all(
-      additionalIngredients.map(async (ingredient) => {
-        let existing = await prisma.ingredient.findUnique({
-          where: { name: ingredient.name },
+    // Verifica se a receita pode ser feita
+    if (aiGeneratedRecipe.isPossibleToMake === false) {
+      res
+        .status(400)
+        .send({
+          error:
+            "Não é possível gerar uma receita viável com os ingredientes e observações fornecidos.",
         });
+      return;
+    }
 
-        if (!existing) {
-          existing = await prisma.ingredient.create({
-            data: { name: ingredient.name },
-          });
-        }
-
-        return {
-          ingredientId: existing.id,
-          ingredientName: existing.name,
-          quantity: ingredient.quantity || null,
-          unit: ingredient.unit || null,
-        };
-      })
+    // Usa a função utilitária apenas uma vez para todos os ingredientes da IA
+    const finalIngredients = await findOrCreateIngredients(
+      aiGeneratedRecipe.ingredients
     );
-
-    // Juntar os ingredientes originais com os adicionais
-    const finalIngredients = [
-      ...processedIngredients,
-      ...additionalIngredientRecords,
-    ];
 
     const recipeImage = await getPexelsImage(aiGeneratedRecipe.whatIs); // URL da imagem gerada pela IA
 
@@ -255,8 +231,12 @@ export const getRecipeById = async (
     let isLiked = false;
     let isFavorited = false;
     if (user) {
-      isLiked = !!(await prisma.like.findFirst({ where: { recipeId: id, userId: user.id } }));
-      isFavorited = !!(await prisma.favorite.findFirst({ where: { recipeId: id, userId: user.id } }));
+      isLiked = !!(await prisma.like.findFirst({
+        where: { recipeId: id, userId: user.id },
+      }));
+      isFavorited = !!(await prisma.favorite.findFirst({
+        where: { recipeId: id, userId: user.id },
+      }));
     }
 
     res.status(200).send({
