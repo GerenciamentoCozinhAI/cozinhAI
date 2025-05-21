@@ -1,60 +1,128 @@
-# cozinhAI
-Repositorio criado para o Projeto da Cadeira de Gerenciamento de Projetos, o CozinhAI, um site de receitas com IA auxiliadora.
+# 🍳 CozinhAI
 
-Repository created for the Project Management Course project, CozinhAI, a recipe website with AI assistance.
+CozinhAI é uma plataforma inteligente de receitas que utiliza Inteligência Artificial para sugerir, criar e gerenciar receitas personalizadas.  
+Este projeto foi desenvolvido para a disciplina de Gerenciamento de Projetos (2024) e conta com:
 
+- Backend: Node.js + Express + Prisma + PostgreSQL  
+- Frontend: React + TypeScript + Vite
 
-# React + TypeScript + Vite
+## 🚀 Funcionalidades
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Autenticação de usuários (incluindo OAuth via Google/Supabase)
+- Criação, edição e exclusão de receitas
+- Geração de receitas com IA (Google Gemini)
+- Curtir e favoritar receitas
+- Listagem de receitas da comunidade e do usuário
+- Perfil com estatísticas (receitas criadas, favoritas, etc.)
+- Interface moderna e responsiva
 
-Currently, two official plugins are available:
+## 📁 Estrutura do Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+cozinhAI/
+│
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── middlewares/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── prisma/
+│   │   ├── schema.prisma
+│   │   └── migrations/
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── ...
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── docs/
+│   ├── Arquitetura CozinhAI.pdf
+│   └── Visão de Produto - CozinhAI.pdf
+│
+└── README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ⚙️ Como Rodar o Projeto
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### ✅ Pré-requisitos
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+- Node.js (v18+)
+- PostgreSQL
+- Conta no Supabase (opcional, para autenticação OAuth)
+
+### 🖥️ Backend
+
+```bash
+cd backend
+npm install
+# configure o arquivo .env com base no .env.example
+npx prisma migrate dev
+npm run dev
 ```
+
+> O backend estará disponível em: http://localhost:3333
+
+### 💻 Frontend
+
+```bash
+cd frontend
+npm install
+# configure o arquivo .env com base no .env.example
+npm run dev
+```
+
+> O frontend estará disponível em: http://localhost:5173
+
+## 📄 Documentação
+
+- [📘 Arquitetura CozinhAI](docs/Arquitetura%20CozinhAI.pdf)
+- [📕 Visão de Produto - CozinhAI](docs/Vis%C3%A3o%20de%20Produto%20-%20CozinhAI.pdf)
+
+## 🧰 Tecnologias Utilizadas
+
+Frontend:
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+
+Backend:
+- Node.js
+- Express
+- Prisma
+- PostgreSQL
+
+Integrações:
+- Google Gemini API (IA)
+- Supabase Auth (OAuth)
+- ESLint
+- Vercel / Render (deploy sugerido)
+
+## 📜 Scripts Úteis
+
+### Backend
+
+```bash
+npm run dev          # Inicia o servidor em modo desenvolvimento  
+npx prisma studio    # Interface visual do banco de dados  
+```
+
+### Frontend
+
+```bash
+npm run dev          # Inicia o frontend em modo desenvolvimento  
+npm run build        # Gera a build de produção  
+```
+
+## 👨‍💻 Autor
+
+Projeto desenvolvido por Esly Caetano para a disciplina de Gerenciamento de Projetos — 2024.
