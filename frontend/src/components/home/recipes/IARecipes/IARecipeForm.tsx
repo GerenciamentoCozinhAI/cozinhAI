@@ -1,4 +1,3 @@
-"use client"
 
 import React, { useState } from "react"
 import { createRecipeWithAI } from "../../../../services/recipeService"
@@ -90,8 +89,8 @@ const IARecipeForm: React.FC<IARecipeFormProps> = ({ onSuccess }) => {
       })
       alert("Receita gerada com sucesso!")
       onSuccess()
-    } catch (error) {
-      alert("Erro ao gerar receita com IA.")
+    } catch (error: any) {
+      alert("Erro ao gerar receita com IA: " + error.error)
     } finally {
       setIsSubmitting(false)
     }
@@ -179,7 +178,7 @@ const IARecipeForm: React.FC<IARecipeFormProps> = ({ onSuccess }) => {
           value={observations}
           onChange={(e) => setObservations(e.target.value)}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all min-h-[100px]"
-          placeholder="Ex: Quero uma receita vegana, sem glúten, etc. Você pode também adicionar características da receita que você quer e não passar ingrediente algum."
+          placeholder="Ex: Indique se quer que a IA adicione ingredientes ou não, se quer uma receita vegana, sem glúten, etc. Você pode também adicionar características da receita que você quer e não passar ingrediente algum."
           rows={8}
         />
       </div>

@@ -1,7 +1,7 @@
 export async function getPexelsImage(whatIs: string): Promise<string> {
     const apiKey = process.env.PEXELS_ACCESS_KEY!;
     const query = whatIs;
-    const endpoint = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`;
+    const endpoint = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=landscape&per_page=1`;
   
     try {
       const response = await fetch(endpoint, {
