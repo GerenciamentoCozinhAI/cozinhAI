@@ -1,11 +1,10 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Search, Clock, ChefHat, Cpu, X, Filter, Trash2 } from "lucide-react"
+import { Search, Clock, Cpu, X, Filter, Trash2 } from "lucide-react"
 
 interface RecipeFilterProps {
   onFilter: (filters: {
     search?: string
-    difficulty?: number
     maxPrepTime?: number
     ingredient?: string
     isGeneratedByAI?: boolean
@@ -14,7 +13,6 @@ interface RecipeFilterProps {
 
 const RecipeFilterNavbar: React.FC<RecipeFilterProps> = ({ onFilter }) => {
   const [search, setSearch] = useState("")
-  const [difficulty, setDifficulty] = useState<number | "">("")
   const [maxPrepTime, setMaxPrepTime] = useState<number | "">("")
   const [ingredient, setIngredient] = useState("")
   const [isGeneratedByAI, setIsGeneratedByAI] = useState<null | boolean>(null)
@@ -25,18 +23,16 @@ const RecipeFilterNavbar: React.FC<RecipeFilterProps> = ({ onFilter }) => {
   useEffect(() => {
     let count = 0
     if (search) count++
-    if (difficulty !== "") count++
     if (maxPrepTime !== "") count++
     if (ingredient) count++
     if (isGeneratedByAI !== null) count++
     setActiveFilters(count)
-  }, [search, difficulty, maxPrepTime, ingredient, isGeneratedByAI])
+  }, [search, maxPrepTime, ingredient, isGeneratedByAI])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onFilter({
       search: search || undefined,
-      difficulty: difficulty ? Number(difficulty) : undefined,
       maxPrepTime: maxPrepTime ? Number(maxPrepTime) : undefined,
       ingredient: ingredient || undefined,
       isGeneratedByAI: isGeneratedByAI === null ? undefined : isGeneratedByAI,
@@ -45,16 +41,13 @@ const RecipeFilterNavbar: React.FC<RecipeFilterProps> = ({ onFilter }) => {
 
   const handleClearFilters = () => {
     setSearch("")
-    setDifficulty("")
     setMaxPrepTime("")
     setIngredient("")
     setIsGeneratedByAI(null)
-
     onFilter({})
   }
 
   const toggleExpand = (e: React.MouseEvent) => {
-    // Evitar que cliques em botões dentro do cabeçalho acionem a expansão/retração
     if (
       e.target instanceof HTMLElement &&
       (e.target.closest("button") || e.target.closest("input") || e.target.closest("select"))
@@ -107,7 +100,7 @@ const RecipeFilterNavbar: React.FC<RecipeFilterProps> = ({ onFilter }) => {
 
       {isExpanded && (
         <div onClick={(e) => e.stopPropagation()}>
-          <form onSubmit={handleSubmit} className="flex flex-wrap gap-4 items-end p-4 pt-0">
+          <form onSubmit={handleSubmit} className="flex flex-wrap gap-5 items-end p-4 pt-0">
             <div className="filter-group">
               <div className="flex items-center mb-1">
                 <Search className="h-4 w-4 mr-1 flex-shrink-0" />
@@ -126,33 +119,6 @@ const RecipeFilterNavbar: React.FC<RecipeFilterProps> = ({ onFilter }) => {
                   <button
                     type="button"
                     onClick={() => setSearch("")}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <div className="flex items-center mb-1">
-                <ChefHat className="h-4 w-4 mr-1 flex-shrink-0" />
-                <span className="text-xs font-semibold text-gray-700">Dificuldade</span>
-              </div>
-              <div className="relative">
-                <input
-                  type="number"
-                  min={1}
-                  max={10}
-                  placeholder="1-10"
-                  value={difficulty}
-                  onChange={(e) => setDifficulty(e.target.value ? Number(e.target.value) : "")}
-                  className="filter-input w-full sm:w-20"
-                />
-                {difficulty && (
-                  <button
-                    type="button"
-                    onClick={() => setDifficulty("")}
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     <X className="h-4 w-4" />
@@ -255,7 +221,6 @@ const RecipeFilterNavbar: React.FC<RecipeFilterProps> = ({ onFilter }) => {
       {!isExpanded && activeFilters > 0 && (
         <div className="px-4 pb-4 flex flex-wrap gap-2">
           {search && <FilterTag label={`Busca: ${search}`} onRemove={() => setSearch("")} />}
-          {difficulty !== "" && <FilterTag label={`Dificuldade: ${difficulty}`} onRemove={() => setDifficulty("")} />}
           {maxPrepTime !== "" && (
             <FilterTag label={`Tempo máx: ${maxPrepTime} min`} onRemove={() => setMaxPrepTime("")} />
           )}

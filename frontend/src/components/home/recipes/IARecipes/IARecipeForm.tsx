@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { createRecipeWithAI } from "../../../../services/recipeService"
 import { searchIngredients } from "../../../../services/ingredientService"
 import { Plus, Trash2, Bot, Save } from "lucide-react"
+import { useToast } from "../../../../contexts/ToastContext"
 
 interface Ingredient {
   name: string
@@ -20,6 +21,7 @@ const IARecipeForm: React.FC<IARecipeFormProps> = ({ onSuccess }) => {
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [activeIngredientIndex, setActiveIngredientIndex] = useState<number | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { showToast } = useToast()
 
   const handleIngredientChange = async (index: number, field: keyof Ingredient, value: string | number) => {
     const updatedIngredients = [...ingredients]
@@ -35,7 +37,7 @@ const IARecipeForm: React.FC<IARecipeFormProps> = ({ onSuccess }) => {
         (ing, i) => i !== index && ing.name.trim().toLowerCase() === nameLower && nameLower !== "",
       )
       if (isDuplicate) {
-        alert("Ingrediente já adicionado!")
+        showToast("Ingrediente já adicionado!", "error");
         return
       }
     }
@@ -87,10 +89,10 @@ const IARecipeForm: React.FC<IARecipeFormProps> = ({ onSuccess }) => {
         ingredients,
         observations: observations.trim() || undefined,
       })
-      alert("Receita gerada com sucesso!")
+      showToast("Receita gerada com sucesso!", "success");
       onSuccess()
     } catch (error: any) {
-      alert("Erro ao gerar receita com IA: " + error.error)
+      showToast("Erro ao gerar receita: " + error.error, "error");
     } finally {
       setIsSubmitting(false)
     }

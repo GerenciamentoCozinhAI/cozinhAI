@@ -96,6 +96,7 @@ const FavoriteList: React.FC = () => {
               isGeneratedByAI={favorite.recipe.isGeneratedByAI}
               createdAt={favorite.recipe.createdAt}
               likes={favorite.recipe.likes}
+              user={favorite.recipe.user}
             />
           ))}
         </div>

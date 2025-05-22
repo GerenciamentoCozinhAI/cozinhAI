@@ -11,7 +11,8 @@ export const getAllIngredients = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar ingredientes: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -32,7 +33,8 @@ export const getIngredientByName = async (name: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar ingrediente: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -61,7 +63,8 @@ export const createIngredient = async (ingredientData: { name: string }): Promis
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao criar ingrediente: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -82,7 +85,8 @@ export const searchIngredients = async (query: string): Promise<any[]> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar ingredientes: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -114,7 +118,8 @@ export const updateIngredient = async (
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao atualizar ingrediente: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -142,7 +147,8 @@ export const deleteIngredient = async (id: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao deletar ingrediente: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();

@@ -7,12 +7,14 @@ import {
   updateRecipe,
 } from "../../../../services/recipeService";
 import Loading from "../../../../components/loading/Loading";
+import { useToast } from "../../../../contexts/ToastContext";
 
 const EditRecipe: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -23,7 +25,7 @@ const EditRecipe: React.FC = () => {
         setRecipe(data);
       } catch (error) {
         console.error("Erro ao buscar receita:", error);
-        alert("Erro ao carregar a receita.");
+        showToast("Erro ao carregar a receita.", "error");
         navigate("/home/my-recipes");
       } finally {
         setIsLoading(false);
@@ -31,10 +33,9 @@ const EditRecipe: React.FC = () => {
     };
 
     fetchRecipe();
-  }, [id, navigate]);
+  }, [id, navigate, showToast]);
 
   const handleSuccess = () => {
-    // Redireciona para a página de lista de receitas ou outra página após editar a receita
     navigate("/home/my-recipes");
   };
 
@@ -43,11 +44,11 @@ const EditRecipe: React.FC = () => {
 
     try {
       await updateRecipe(id, updatedRecipe);
-      alert("Receita atualizada com sucesso!");
+      showToast("Receita atualizada com sucesso!", "success");
       handleSuccess();
     } catch (error) {
       console.error("Erro ao atualizar receita:", error);
-      alert("Erro ao atualizar receita.");
+      showToast("Erro ao atualizar receita.", "error");
     }
   };
 

@@ -18,7 +18,8 @@ export const addLike = async (recipeId: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao curtir a receita: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -46,7 +47,8 @@ export const removeLike = async (recipeId: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao remover curtida da receita: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
