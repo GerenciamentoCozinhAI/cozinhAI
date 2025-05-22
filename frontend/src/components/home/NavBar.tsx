@@ -61,8 +61,9 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
           <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#8fd14f] group-hover:border-white transition-all duration-200">
             <img
               src={
-                user?.avatar! ||
-                "https://sistemas.ft.unicamp.br/agenda/imagens/sem_foto.png"
+                user?.avatar && user.avatar.trim() !== ""
+                  ? user.avatar
+                  : "https://sistemas.ft.unicamp.br/agenda/imagens/sem_foto.png"
               }
               alt="Foto de perfil"
               className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-200"

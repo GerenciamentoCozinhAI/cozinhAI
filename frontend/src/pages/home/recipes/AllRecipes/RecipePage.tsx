@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -33,6 +31,11 @@ interface Recipe {
   isFavorited?: boolean;
   createdAt?: string;
   isGeneratedByAI?: boolean;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 const RecipePage: React.FC = () => {
@@ -116,8 +119,12 @@ const RecipePage: React.FC = () => {
         )}
       </div>
 
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">{recipe.title}</h1>
-
+      <h1 className="text-3xl font-bold text-gray-800 mb-1">{recipe.title}</h1>
+      {recipe.user && (
+        <p className="text-gray-500 text-base mb-4">
+          Criada por <span className="font-semibold">{recipe.user.name}</span>
+        </p>
+      )}
       <p className="text-gray-600 mb-6 text-lg leading-relaxed">
         {recipe.description || "Sem descrição disponível."}
       </p>
@@ -153,17 +160,20 @@ const RecipePage: React.FC = () => {
           <ul className="space-y-2">
             {recipe.ingredients.map((ingredient: Ingredient, index: number) =>
               ingredient.ingredientName ? (
-              <li key={index} className="flex items-start gap-2 text-gray-700">
-                <ChevronRight
-                size={18}
-                className="text-green-500 mt-1 flex-shrink-0"
-                />
-                <span>
-                <strong>{ingredient.ingredientName}</strong>
-                {ingredient.quantity > 0 && ` - ${ingredient.quantity}`}
-                {ingredient.unit && ` ${ingredient.unit}`}
-                </span>
-              </li>
+                <li
+                  key={index}
+                  className="flex items-start gap-2 text-gray-700"
+                >
+                  <ChevronRight
+                    size={18}
+                    className="text-green-500 mt-1 flex-shrink-0"
+                  />
+                  <span>
+                    <strong>{ingredient.ingredientName}</strong>
+                    {ingredient.quantity > 0 && ` - ${ingredient.quantity}`}
+                    {ingredient.unit && ` ${ingredient.unit}`}
+                  </span>
+                </li>
               ) : null
             )}
           </ul>

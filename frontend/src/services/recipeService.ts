@@ -11,7 +11,8 @@ export const getAllRecipes = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar receitas: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
     }
 
     return await response.json();
@@ -39,7 +40,8 @@ export const getRecipeById = async (id: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar receita: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
     }
 
     return await response.json();
@@ -67,9 +69,8 @@ export const getMyRecipes = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Erro ao buscar receitas do usuário: ${response.statusText}`
-      );
+      const errorData = await response.json();
+      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
     }
 
     return await response.json();
@@ -97,9 +98,8 @@ export const getMyRecipeCount = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Erro ao buscar quantidade de receitas: ${response.statusText}`
-      );
+      const errorData = await response.json();
+      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
     }
 
     return await response.json();
@@ -214,7 +214,8 @@ export const updateRecipe = async (
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao atualizar receita: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
     }
 
     return await response.json();
@@ -242,7 +243,8 @@ export const deleteRecipe = async (id: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao deletar receita: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
     }
 
     return await response.json();

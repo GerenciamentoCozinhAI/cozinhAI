@@ -1,14 +1,15 @@
-// src/components/home/userProfile/UserProfile.tsx
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { getMyUser, deleteMyUser } from "../../../services/userService";
-import {getMyRecipeCount} from "../../../services/recipeService"
+import { getMyRecipeCount } from "../../../services/recipeService";
 import { getFavoriteCount } from "../../../services/favoriteService";
 import { Edit, Mail, User } from "lucide-react";
 import UserForm from "./UserForm";
 import { User as UserType } from "./UserForm";
 import Loading from "../../loading/Loading";
+import { useToast } from "../../../contexts/ToastContext";
+import Modal from "../../ui/Modal";
 
 const UserProfile: React.FC = () => {
   const [user, setUser] = useState<UserType | null>(null);
@@ -16,6 +17,8 @@ const UserProfile: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("info");
+  const { showToast } = useToast();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -26,21 +29,21 @@ const UserProfile: React.FC = () => {
           setError("Token não encontrado");
           return;
         }
-         // Buscar informações do usuário
-         const userData = await getMyUser();
+        // Buscar informações do usuário
+        const userData = await getMyUser();
 
-         // Buscar contagem de receitas criadas
-         const recipeCount = await getMyRecipeCount();
- 
-         // Buscar contagem de receitas favoritas
-         const favoriteCount = await getFavoriteCount();
- 
-         // Atualizar o estado do usuário com os novos dados
-         setUser({
-           ...userData,
-           recipeCount: recipeCount.count,
-           favoriteCount : favoriteCount.count,
-         });
+        // Buscar contagem de receitas criadas
+        const recipeCount = await getMyRecipeCount();
+
+        // Buscar contagem de receitas favoritas
+        const favoriteCount = await getFavoriteCount();
+
+        // Atualizar o estado do usuário com os novos dados
+        setUser({
+          ...userData,
+          recipeCount: recipeCount.count,
+          favoriteCount: favoriteCount.count,
+        });
       } catch (error) {
         setError("Erro ao buscar usuário");
         console.error("Erro ao buscar usuário:", error);
@@ -52,27 +55,27 @@ const UserProfile: React.FC = () => {
     fetchUser();
   }, []);
 
-    const handleDeleteAccount = async () => {
-      if (window.confirm("Tem certeza que deseja excluir sua conta?")){
-        try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        if (!token) {
-            setError("Token não encontrado");
-            return;
-        }
-        await deleteMyUser();
-        alert("Conta excluída com sucesso!");
-        await logout(); // Logout após a exclusão da conta
-        } catch (error) {
-        setError("Erro ao excluir conta");
-        console.error("Erro ao excluir conta:", error);
-        } finally {
-        setLoading(false);
-        }
+  const handleDeleteAccount = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Token não encontrado");
+        showToast("Token não encontrado", "error");
+        return;
       }
-    };
-  
+      await deleteMyUser();
+      showToast("Conta excluída com sucesso!", "success");
+      await logout(); // Logout após a exclusão da conta
+    } catch (error) {
+      setError("Erro ao excluir conta");
+      showToast("Erro ao excluir conta", "error");
+      console.error("Erro ao excluir conta:", error);
+    } finally {
+      setLoading(false);
+      setShowConfirm(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -229,8 +232,7 @@ const UserProfile: React.FC = () => {
                   Configurações da Conta
                 </h3>
                 <div className="space-y-4">
-    
-                  <UserForm user={user} setUser={setUser}/>
+                  <UserForm user={user} setUser={setUser} />
 
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium mb-3 text-red-600">
@@ -240,7 +242,10 @@ const UserProfile: React.FC = () => {
                       Ações nesta seção são permanentes e não podem ser
                       desfeitas.
                     </p>
-                    <button onClick={handleDeleteAccount} className="bg-red-100 text-red-600 border border-red-200 px-4 py-2 rounded-md hover:bg-red-200 transition-colors">
+                    <button
+                      onClick={() => setShowConfirm(true)}
+                      className="bg-red-100 text-red-600 border border-red-200 px-4 py-2 rounded-md hover:bg-red-200 transition-colors"
+                    >
                       Excluir Minha Conta
                     </button>
                   </div>
@@ -250,6 +255,28 @@ const UserProfile: React.FC = () => {
           </div>
         </div>
       )}
+      <Modal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        title="Confirmar exclusão"
+      >
+        <p>Tem certeza que deseja excluir sua conta?</p>
+        <div className="flex justify-end gap-2 mt-4">
+          <button
+            onClick={() => setShowConfirm(false)}
+            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleDeleteAccount}
+            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
+            disabled={loading}
+          >
+            {loading ? "Excluindo..." : "Excluir"}
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

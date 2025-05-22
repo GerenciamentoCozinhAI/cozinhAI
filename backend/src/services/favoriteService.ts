@@ -1,10 +1,26 @@
 import { prisma } from "../database/prisma";
 
 export async function getAllFavorites(userId: string) {
-  return prisma.favorite.findMany({
+  const favorites = await prisma.favorite.findMany({
     where: { userId },
-    include: { recipe: true },
+    include: {
+      recipe: {
+        include: {
+          _count: { select: { likes: true } },
+          user: { select: { id: true, name: true, email: true } }
+        }
+      }
+    }
   });
+
+  // Adiciona o campo likes na receita para facilitar o frontend
+  return favorites.map(fav => ({
+    ...fav,
+    recipe: {
+      ...fav.recipe,
+      likes: fav.recipe._count?.likes ?? 0
+    }
+  }));
 }
 
 export async function getFavoriteCount(userId: string) {

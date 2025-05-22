@@ -3,11 +3,13 @@ import Navbar from "../../components/home/NavBar";
 import { Menu } from "lucide-react";
 import { Outlet } from "react-router-dom";
 import Footer from "../../components/home/Footer";
+import { ToastProvider } from "../../contexts/ToastContext";
 
 export default function Home() {
   const [showNavbar, setShowNavbar] = useState(false); // começa escondida!
 
   return (
+    <ToastProvider>
     <div className="flex min-h-screen bg-[#d8f3dc]">
       {/* Botão para abrir a Navbar (só aparece no mobile) */}
       {!showNavbar && (
@@ -51,5 +53,6 @@ export default function Home() {
         </div>
       </main>
     </div>
+    </ToastProvider>
   );
 }

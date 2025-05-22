@@ -18,9 +18,10 @@ export const getAllFavorites = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar receitas favoritas: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
-
+    
     return await response.json();
   } catch (error) {
     console.error("Erro em getAllFavorites:", error);
@@ -46,7 +47,8 @@ export const getFavoriteCount = async (): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar quantidade de receitas favoritas: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -75,7 +77,8 @@ export const addFavorite = async (recipeId: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao adicionar receita aos favoritos: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
@@ -103,7 +106,8 @@ export const removeFavorite = async (recipeId: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao remover receita dos favoritos: ${response.statusText}`);
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();

@@ -95,6 +95,7 @@ const RecipeList: React.FC = () => {
               isGeneratedByAI={recipe.isGeneratedByAI}
               createdAt={recipe.createdAt}
               likes={recipe.likes}
+              user={recipe.user}
             />
           ))}
         </div>
