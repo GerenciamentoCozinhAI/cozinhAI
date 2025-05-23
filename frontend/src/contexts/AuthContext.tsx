@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSuccess("");
       await registerUser(data);
       setSuccess("Registro realizado com sucesso!");
-      setTimeout(() => navigate("/login"), 1000);
+      setTimeout(() => navigate("/login"), 250);
     } catch (err: any) {
       setError(err.message);
     }
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("token", res.session.access_token);
       setIsAuthenticated(true);
       setSuccess("Login realizado com sucesso!");
-      setTimeout(() => navigate("/home"), 1000);
+      setTimeout(() => navigate("/home"), 250);
     } catch (err: any) {
       setError(err.message);
     }
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(false);
       setError("");
       setSuccess("Logout realizado com sucesso!");
-      setTimeout(() => navigate("/login"), 1000);
+      setTimeout(() => navigate("/login"), 250);
     } catch (err: any) {
       setError(err.message || "Erro ao realizar logout. Tente novamente.");
     }
