@@ -1,6 +1,7 @@
+import { fetchWithAuth } from "./fetchWithAuth";
 const apiURL = import.meta.env.VITE_API_URL;
 
-// Obter todos os ingredientes
+// Obter todos os ingredientes (rota pública)
 export const getAllIngredients = async (): Promise<any> => {
   try {
     const response = await fetch(`${apiURL}/ingredients`, {
@@ -22,7 +23,7 @@ export const getAllIngredients = async (): Promise<any> => {
   }
 };
 
-// Obter um ingrediente pelo nome
+// Obter um ingrediente pelo nome (rota pública)
 export const getIngredientByName = async (name: string): Promise<any> => {
   try {
     const response = await fetch(`${apiURL}/ingredients/${name}`, {
@@ -44,21 +45,11 @@ export const getIngredientByName = async (name: string): Promise<any> => {
   }
 };
 
-// Criar um novo ingrediente
+// Criar um novo ingrediente (autenticado)
 export const createIngredient = async (ingredientData: { name: string }): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/ingredients`, {
+    const response = await fetchWithAuth(`${apiURL}/ingredients`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(ingredientData),
     });
 
@@ -74,7 +65,7 @@ export const createIngredient = async (ingredientData: { name: string }): Promis
   }
 };
 
-// Buscar ingredientes por nome (autocomplete)
+// Buscar ingredientes por nome (autocomplete, rota pública)
 export const searchIngredients = async (query: string): Promise<any[]> => {
   try {
     const response = await fetch(`${apiURL}/ingredients/search?name=${query}`, {
@@ -96,24 +87,14 @@ export const searchIngredients = async (query: string): Promise<any[]> => {
   }
 };
 
-// Atualizar um ingrediente
+// Atualizar um ingrediente (autenticado)
 export const updateIngredient = async (
   id: string,
   ingredientData: { name: string }
 ): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/ingredients/${id}`, {
+    const response = await fetchWithAuth(`${apiURL}/ingredients/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(ingredientData),
     });
 
@@ -129,21 +110,11 @@ export const updateIngredient = async (
   }
 };
 
-// Deletar um ingrediente
+// Deletar um ingrediente (autenticado)
 export const deleteIngredient = async (id: string): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/ingredients/${id}`, {
+    const response = await fetchWithAuth(`${apiURL}/ingredients/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {

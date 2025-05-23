@@ -1,6 +1,6 @@
-//src/services/authService.ts
-import { supabase } from "../lib/supabase"; // Importando o cliente do Supabase
+import { supabase } from "../lib/supabase";
 import { RegisterPayload } from "../types/authTypes";
+import { fetchWithAuth } from "./fetchWithAuth"; // Importa o helper
 const apiURL = import.meta.env.VITE_API_URL;
 
 export async function registerUser(data: RegisterPayload) {
@@ -30,14 +30,9 @@ export async function loginUser(data: { email: string; password: string }) {
 }
 
 export async function logoutUser() {
-  const token = localStorage.getItem("token"); // Recuperar o token do localStorage
-
-  const res = await fetch(`${apiURL}/auth/logout`, {
+  // Usa o fetchWithAuth para garantir tratamento de token expirado
+  const res = await fetchWithAuth(`${apiURL}/auth/logout`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Passar o token no cabeçalho
-    },
   });
 
   const json = await res.json();

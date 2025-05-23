@@ -15,6 +15,13 @@ export function useToast() {
   return context;
 }
 
+// Variável global para função do toast
+let showGlobalToast: (message: string, type?: ToastType, duration?: number) => void = () => {};
+
+export function getShowGlobalToast() {
+  return showGlobalToast;
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<{
     message: string;
@@ -25,6 +32,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const showToast = (message: string, type: ToastType = "info", duration = 3000) => {
     setToast({ message, type, duration });
   };
+
+  // Registra a função global ao montar o provider
+  showGlobalToast = showToast;
 
   return (
     <ToastContext.Provider value={{ showToast }}>
@@ -40,3 +50,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     </ToastContext.Provider>
   );
 }
+
+// Exporta para uso global fora de componentes React
+export { showGlobalToast };

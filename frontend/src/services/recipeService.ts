@@ -1,6 +1,7 @@
+import { fetchWithAuth } from "./fetchWithAuth";
 const apiURL = import.meta.env.VITE_API_URL;
 
-// Obter todas as receitas
+// Obter todas as receitas (rota pública)
 export const getAllRecipes = async (): Promise<any> => {
   try {
     const response = await fetch(`${apiURL}/recipes`, {
@@ -12,7 +13,7 @@ export const getAllRecipes = async (): Promise<any> => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
+      throw errorData;
     }
 
     return await response.json();
@@ -22,26 +23,19 @@ export const getAllRecipes = async (): Promise<any> => {
   }
 };
 
-// Obter uma receita pelo ID
+// Obter uma receita pelo ID (rota pública)
 export const getRecipeById = async (id: string): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  const headers: any = {
-    "Content-Type": "application/json",
-  };
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
   try {
     const response = await fetch(`${apiURL}/recipes/${id}`, {
       method: "GET",
-      headers,
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
+      throw errorData;
     }
 
     return await response.json();
@@ -53,24 +47,14 @@ export const getRecipeById = async (id: string): Promise<any> => {
 
 // Obter receitas do usuário autenticado
 export const getMyRecipes = async (): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/recipes/my-recipes`, {
+    const response = await fetchWithAuth(`${apiURL}/recipes/my-recipes`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
+      throw errorData;
     }
 
     return await response.json();
@@ -82,24 +66,14 @@ export const getMyRecipes = async (): Promise<any> => {
 
 // Obter a quantidade de receitas do usuário autenticado
 export const getMyRecipeCount = async (): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/recipes/count`, {
+    const response = await fetchWithAuth(`${apiURL}/recipes/count`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
+      throw errorData;
     }
 
     return await response.json();
@@ -121,19 +95,9 @@ export const createRecipe = async (recipeData: {
   isGeneratedByAI?: boolean;
   ingredients: { name: string; quantity: number; unit: string }[];
 }): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/recipes/create`, {
+    const response = await fetchWithAuth(`${apiURL}/recipes/create`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(recipeData),
     });
 
@@ -154,25 +118,15 @@ export const createRecipeWithAI = async (data: {
   ingredients: { name: string; quantity: number; unit: string }[];
   observations?: string;
 }): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/recipes/generate-with-ai`, {
+    const response = await fetchWithAuth(`${apiURL}/recipes/generate-with-ai`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
+      throw errorData;
     }
 
     return await response.json();
@@ -197,25 +151,15 @@ export const updateRecipe = async (
     ingredients: { name: string; quantity: number; unit: string }[];
   }
 ): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/recipes/${id}`, {
+    const response = await fetchWithAuth(`${apiURL}/recipes/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(recipeData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
+      throw errorData;
     }
 
     return await response.json();
@@ -227,24 +171,14 @@ export const updateRecipe = async (
 
 // Deletar uma receita
 export const deleteRecipe = async (id: string): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/recipes/${id}`, {
+    const response = await fetchWithAuth(`${apiURL}/recipes/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw errorData; // Agora lança o JSON do backend, igual ao createRecipe
+      throw errorData;
     }
 
     return await response.json();

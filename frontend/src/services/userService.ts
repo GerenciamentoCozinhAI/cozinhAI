@@ -1,20 +1,11 @@
+import { fetchWithAuth } from "./fetchWithAuth";
 const apiURL = import.meta.env.VITE_API_URL;
-//import { supabase } from "../lib/supabase"; // Importando o cliente do Supabase
 
 // Obter informações do usuário
 export const getMyUser = async (): Promise<any> => {
-  const token = localStorage.getItem("token"); // Recuperar o token do localStorage
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
   try {
-    const response = await fetch(`${apiURL}/users/me`, {
+    const response = await fetchWithAuth(`${apiURL}/users/me`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Passar o token no cabeçalho
-      },
     });
 
     if (!response.ok) {
@@ -36,20 +27,11 @@ export const replaceMyUser = async (userData: {
   name?: string;
   avatar?: string;
 }): Promise<any> => {
-  const token = localStorage.getItem("token"); // Recuperar o token do localStorage
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
   try {
-    const response = await fetch(`${apiURL}/users/me`, {
+    const response = await fetchWithAuth(`${apiURL}/users/me`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Passar o token no cabeçalho
-      },
-      credentials: "include",
       body: JSON.stringify(userData),
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -72,13 +54,10 @@ export const updateMyUser = async (userData: {
   avatar?: string;
 }): Promise<any> => {
   try {
-    const response = await fetch(`${apiURL}/users/me`, {
+    const response = await fetchWithAuth(`${apiURL}/users/me`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
       body: JSON.stringify(userData),
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -94,19 +73,9 @@ export const updateMyUser = async (userData: {
 
 // Remover usuário
 export const deleteMyUser = async (): Promise<any> => {
-  const token = localStorage.getItem("token"); // Recuperar o token do localStorage
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/users/me`, {
+    const response = await fetchWithAuth(`${apiURL}/users/me`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Passar o token no cabeçalho
-      },
     });
 
     if (!response.ok) {

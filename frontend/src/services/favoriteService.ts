@@ -1,20 +1,11 @@
+import { fetchWithAuth } from "./fetchWithAuth";
 const apiURL = import.meta.env.VITE_API_URL;
 
 // Obter todas as receitas favoritas do usuário
 export const getAllFavorites = async (): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/favorites`, {
+    const response = await fetchWithAuth(`${apiURL}/favorites`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {
@@ -31,19 +22,9 @@ export const getAllFavorites = async (): Promise<any> => {
 
 // Obter a quantidade de receitas favoritas do usuário
 export const getFavoriteCount = async (): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/favorites/count`, {
+    const response = await fetchWithAuth(`${apiURL}/favorites/count`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {
@@ -58,22 +39,11 @@ export const getFavoriteCount = async (): Promise<any> => {
   }
 };
 
-
 // Adicionar uma receita aos favoritos
 export const addFavorite = async (recipeId: string): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/favorites/${recipeId}`, {
+    const response = await fetchWithAuth(`${apiURL}/favorites/${recipeId}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {
@@ -90,19 +60,9 @@ export const addFavorite = async (recipeId: string): Promise<any> => {
 
 // Remover uma receita dos favoritos
 export const removeFavorite = async (recipeId: string): Promise<any> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
   try {
-    const response = await fetch(`${apiURL}/favorites/${recipeId}`, {
+    const response = await fetchWithAuth(`${apiURL}/favorites/${recipeId}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {

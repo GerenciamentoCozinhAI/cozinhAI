@@ -24,19 +24,8 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
         const userData = await getMyUser();
         setUser(userData);
       } catch (error: any) {
-        // Só faz logout automático se estiver autenticado
-        if (
-          isAuthenticated &&
-          (error.message?.toLowerCase().includes("401") ||
-            error.message?.toLowerCase().includes("invalid") ||
-            error.message?.toLowerCase().includes("jwt") ||
-            error.message?.toLowerCase().includes("expired"))
-        ) {
-          logout();
-        } else {
-          setUser(null); // visitante ou outro erro
-          console.error("Erro ao buscar usuário:", error);
-        }
+        setUser(null); // visitante ou outro erro
+        console.error("Erro ao buscar usuário:", error);
       }
     };
 
