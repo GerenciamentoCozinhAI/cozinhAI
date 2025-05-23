@@ -65,6 +65,7 @@ Formato dos ingredientes:
 
 Importante:
 - Não adicione ingredientes extras, exceto se isso for explicitamente indicado nas observações do usuário.
+- Caso o ingrediente venha vazio (sem nome), exclua-o da receita.
 - Não crie variações opcionais dentro do mesmo ingrediente. Exemplo incorreto: "Queijo (muçarela, parmesão ou outro de sua preferência)" — mantenha apenas o ingrediente informado.
 - Sempre respeite todas as observações do usuário, como restrições alimentares, preferências ou limitações.
 - As instruções devem ser claras, diretas e detalhadas passo a passo. Inclua modos de preparo como “picar”, “refogar”, “assar”, conforme necessário.
@@ -114,7 +115,7 @@ O objetivo é evitar gerar receitas que sejam impossíveis ou inapropriadas para
     ];
 
     const response = await ai.models.generateContentStream({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash-preview-04-17",
       config,
       contents,
     });
