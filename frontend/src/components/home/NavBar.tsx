@@ -118,7 +118,7 @@ export default function Navbar({ setShowNavbar }: NavbarProps) {
       </nav>
 
       {/* Botão de logout */}
-      <div className="p-4 border-t border-[#4e9f3d]/30">
+      <div className="p-3 border-t border-[#4e9f3d]/30">
         {isAuthenticated ? (
           <button
             onClick={logout}

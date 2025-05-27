@@ -85,8 +85,8 @@ export default function LandingPage() {
               >
                 Como Funciona
               </a>
-              <a href="#cta" className="hover:text-green-200 transition-colors">
-                Começar
+              <a href="#about" className="hover:text-green-200 transition-colors">
+                Sobre o Site
               </a>
             </div>
           </div>
@@ -228,16 +228,16 @@ export default function LandingPage() {
 
         {/* CTA Section */}
         <section
-          id="cta"
+          id="about"
           className="py-12 md:py-16 bg-gradient-to-r from-green-600 to-green-700 text-white"
         >
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
-                Pronto para começar a cozinhar?
+                Esse site foi criado como projeto da Disciplina de Gerenciamento de Projetos
               </h2>
               <p className="text-base md:text-lg mb-6 md:mb-8 text-green-100">
-                Use nosso site para gerar e organizar suas receitas de forma
+                Um site para gerar e organizar suas receitas de forma
                 prática.
               </p>
               <motion.button
@@ -294,27 +294,29 @@ export default function LandingPage() {
                     Como Funciona
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="/about"
+                    className="text-green-800 hover:text-green-950 transition-colors"
+                  >
+                    Sobre o Site
+                  </a>
+                </li>
               </ul>
             </div>
 
             <div className="text-center md:text-right">
-              <h3 className="text-lg font-semibold mb-4">Empresa</h3>
+              <h3 className="text-lg font-semibold mb-4">Criador</h3>
               <ul className="space-y-2">
                 <li>
-                  <a
-                    href="#"
+                    <a
+                    href="https://github.com/eslycaetano"
                     className="text-green-800 hover:text-green-950 transition-colors"
-                  >
-                    Sobre Nós
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-green-800 hover:text-green-950 transition-colors"
-                  >
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
                     Contato
-                  </a>
+                    </a>
                 </li>
               </ul>
             </div>

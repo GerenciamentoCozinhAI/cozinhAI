@@ -7,7 +7,7 @@ import AuthError from "./pages/errors/AuthError";
 import NotFound from "./pages/errors/NotFound";
 import Home from "./pages/home/Home";
 import HomeMain from "./components/home/HomeMain";
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/landing/LandingPage";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
 import UserProfile from "./components/home/userProfile/UserProfile";
@@ -18,6 +18,7 @@ import CreateRecipe from "./pages/home/recipes/AllRecipes/CreateRecipe";
 import CreateIARecipe from "./pages/home/recipes/AllRecipes/CreateIARecipe";
 import EditRecipe from "./pages/home/recipes/AllRecipes/EditRecipe";
 import FavoriteList from "./pages/home/recipes/FavoriteRecipes/FavoriteList";
+import About from "./pages/landing/About";
 
 export default function App() {
   return (
@@ -29,6 +30,13 @@ export default function App() {
           <PublicRoute>
             <LandingPage />
           </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/about"
+        element={
+            <About />  
         }
       />
 
