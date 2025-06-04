@@ -26,11 +26,8 @@ export const getAllRecipes = async (): Promise<any> => {
 // Obter uma receita pelo ID (rota pública)
 export const getRecipeById = async (id: string): Promise<any> => {
   try {
-    const response = await fetch(`${apiURL}/recipes/${id}`, {
+    const response = await fetchWithAuth(`${apiURL}/recipes/${id}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
 
     if (!response.ok) {
