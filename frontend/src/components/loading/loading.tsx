@@ -20,7 +20,6 @@ export default function Loading({
     "Temos receitas para todos os níveis de habilidade culinária.",
     "Use ingredientes da estação para receitas mais saborosas e econômicas.",
     "Use ingredientes que estão para se vencer, assim você evita desperdício.",
-    "Quer fazer uma receita bem ruim? Filtre por deslikes.",
     "Você sabia que pode adicionar suas próprias receitas à comunidade?",
   ]
 
