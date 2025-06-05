@@ -2,8 +2,8 @@
 
 ![Banner do projeto](frontend/public/banner/CozinhAI%20banner.png)
 
-CozinhAI é uma plataforma inteligente de receitas que utiliza Inteligência Artificial para sugerir, criar e gerenciar receitas personalizadas.  
-Este projeto foi desenvolvido para a disciplina de Gerenciamento de Projetos (2024) e conta com:
+CozinhAI é uma plataforma inteligente de receitas, que utiliza Inteligência Artificial para criar receitas personalizadas.  
+Este projeto foi desenvolvido para a disciplina de Gerenciamento de Projetos (2025 - UEPB) e conta com:
 
 - Backend: Node.js + Express + Prisma + PostgreSQL  
 - Frontend: React + TypeScript + Vite
